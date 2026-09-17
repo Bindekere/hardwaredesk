@@ -31,6 +31,36 @@ export const CreateProductSchema = z.object({
   location: z.string().default('Main Store'),
 });
 
+export const UpdateProductSchema = z.object({
+  id: z.string().uuid('Valid product ID required'),
+  name: z.string().min(2, 'Product name is required'),
+  sku: z.string().min(2, 'SKU code is required'),
+  barcode: z.string().nullable().optional(),
+  categoryName: z.string().default('General'),
+  unit: z.string().default('pcs'),
+  costPrice: z.number().min(0, 'Cost price cannot be negative'),
+  sellingPrice: z.number().min(0, 'Selling price cannot be negative'),
+  minimumStock: z.number().min(0).default(5),
+  location: z.string().default('Main Store'),
+});
+
+export const BulkProductItemSchema = z.object({
+  name: z.string().min(1, 'Product name is required'),
+  sku: z.string().min(1, 'SKU code is required'),
+  barcode: z.string().nullable().optional(),
+  categoryName: z.string().default('General'),
+  unit: z.string().default('pcs'),
+  costPrice: z.number().min(0, 'Cost price cannot be negative').default(0),
+  sellingPrice: z.number().min(0, 'Selling price cannot be negative').default(0),
+  initialStock: z.number().min(0, 'Stock cannot be negative').default(0),
+  minimumStock: z.number().min(0).default(5),
+  location: z.string().default('Main Store'),
+});
+
+export const BulkImportSchema = z.object({
+  products: z.array(BulkProductItemSchema).min(1, 'At least one product is required for import'),
+});
+
 export const AdjustStockSchema = z.object({
   productId: z.string().uuid('Valid product ID required'),
   quantityDelta: z.number().refine(val => val !== 0, 'Adjustment delta cannot be 0'),
