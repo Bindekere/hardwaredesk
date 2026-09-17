@@ -83,9 +83,20 @@ export default function App() {
     });
   }, []);
 
+  const refreshProducts = async () => {
+    const prods = await fetchProducts();
+    if (prods && prods.length > 0) {
+      setProductsList(prods);
+    }
+  };
+
   // Shared state handlers for products
   const handleAddProduct = (newProd) => {
     setProductsList(prev => [...prev, newProd]);
+  };
+
+  const handleBulkImport = (importedProducts) => {
+    refreshProducts();
   };
 
   const handleDeleteProduct = (prodId) => {
@@ -256,6 +267,8 @@ export default function App() {
                 onAddProduct={handleAddProduct}
                 onDeleteProduct={handleDeleteProduct}
                 onAdjustStock={handleAdjustStock}
+                onBulkImport={handleBulkImport}
+                onReload={refreshProducts}
               />
             </div>
           ) : activeTab === 'Purchases' ? (
@@ -263,7 +276,12 @@ export default function App() {
           ) : activeTab === 'Debtors & Creditors' || activeTab === 'Customers & Debtors' || activeTab === 'Suppliers & Creditors' ? (
             <DebtorsCreditorsLedgerView onAddReceipt={handleSaleComplete} />
           ) : activeTab === 'Stock Take' ? (
-            <StockTakeView userRole={userRole} />
+            <StockTakeView 
+              userRole={userRole} 
+              products={productsList}
+              onAdjustStock={handleAdjustStock}
+              onReload={refreshProducts}
+            />
           ) : activeTab === 'Reports' ? (
             <ReportsView />
           ) : activeTab === 'Receipt Book' ? (

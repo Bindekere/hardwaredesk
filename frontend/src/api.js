@@ -25,6 +25,21 @@ export async function createProductApi(product) {
   }
 }
 
+export async function bulkImportProductsApi(products) {
+  try {
+    const res = await fetch(`${API_BASE}/products/bulk`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(products)
+    });
+    if (!res.ok) throw new Error('Bulk import failed');
+    return await res.json();
+  } catch (err) {
+    console.warn('Backend bulk import error:', err);
+    return null;
+  }
+}
+
 export async function deleteProductApi(productId) {
   try {
     const res = await fetch(`${API_BASE}/products/${productId}`, {
