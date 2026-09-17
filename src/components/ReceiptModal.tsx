@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Receipt } from '@/lib/types';
-import { formatCurrency, formatDateTime } from '@/lib/formatters';
+import { formatCurrency, formatDateTime, formatQuantity } from '@/lib/formatters';
 import { Printer, Download, X, CheckCircle, Store, FileText } from 'lucide-react';
 
 interface ReceiptModalProps {
@@ -80,7 +80,7 @@ export default function ReceiptModal({
                 ${(receipt.items_snapshot || []).map((item: any) => `
                   <tr>
                     <td>${item.name || item.product_name}</td>
-                    <td class="right">${item.quantity}</td>
+                    <td class="right">${formatQuantity(item.quantity)}</td>
                     <td class="right">${formatCurrency(item.subtotal || (item.quantity * item.unit_price), currency)}</td>
                   </tr>
                 `).join('')}
@@ -172,7 +172,7 @@ export default function ReceiptModal({
                     <td>${idx + 1}</td>
                     <td><strong>${item.name || item.product_name}</strong></td>
                     <td class="right">${formatCurrency(item.unit_price || 0, currency)}</td>
-                    <td class="right">${item.quantity}</td>
+                    <td class="right">${formatQuantity(item.quantity)}</td>
                     <td class="right">${formatCurrency(item.subtotal || (item.quantity * item.unit_price), currency)}</td>
                   </tr>
                 `).join('')}
@@ -269,7 +269,7 @@ export default function ReceiptModal({
             {(receipt.items_snapshot || []).map((item: any, idx: number) => (
               <div key={idx} className="flex justify-between items-start text-slate-800">
                 <span className="truncate max-w-[180px]">
-                  {item.quantity}x {item.name || item.product_name}
+                  {formatQuantity(item.quantity)}x {item.name || item.product_name}
                 </span>
                 <span className="font-bold">
                   {formatCurrency(item.subtotal || (item.quantity * item.unit_price), currency)}

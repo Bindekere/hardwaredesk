@@ -4,7 +4,7 @@ import React, { useState, useEffect, useTransition, useRef } from 'react';
 import { useApp } from '@/components/AppProvider';
 import { getProducts, createProduct, adjustStock, getProductMovements, updateProduct, bulkImportProducts } from '@/actions/products';
 import { Product, InventoryMovement, MovementType } from '@/lib/types';
-import { formatCurrency, formatDateTime } from '@/lib/formatters';
+import { formatCurrency, formatDateTime, formatQuantity, parseFractionOrDecimal } from '@/lib/formatters';
 import * as XLSX from 'xlsx';
 import {
   Search,
@@ -128,8 +128,8 @@ export default function InventoryPage() {
         unit: newProd.unit,
         costPrice: parseFloat(newProd.costPrice) || 0,
         sellingPrice: parseFloat(newProd.sellingPrice) || 0,
-        initialStock: parseFloat(newProd.initialStock) || 0,
-        minimumStock: parseFloat(newProd.minimumStock) || 5,
+        initialStock: parseFractionOrDecimal(newProd.initialStock) || 0,
+        minimumStock: parseFractionOrDecimal(newProd.minimumStock) || 5,
         location: newProd.location,
       });
 
@@ -160,9 +160,9 @@ export default function InventoryPage() {
     if (!showAdjustModal) return;
     setErrorMsg(null);
 
-    const delta = parseFloat(adjustDelta) || 0;
-    if (delta === 0) {
-      setErrorMsg('Quantity change cannot be 0');
+    const delta = parseFractionOrDecimal(adjustDelta);
+    if (delta === 0 || isNaN(delta)) {
+      setErrorMsg('Quantity change cannot be 0 or invalid');
       return;
     }
 
@@ -224,7 +224,7 @@ export default function InventoryPage() {
         unit: editForm.unit,
         costPrice: parseFloat(editForm.costPrice) || 0,
         sellingPrice: parseFloat(editForm.sellingPrice) || 0,
-        minimumStock: parseFloat(editForm.minimumStock) || 5,
+        minimumStock: parseFractionOrDecimal(editForm.minimumStock) || 5,
         location: editForm.location,
       });
 
@@ -363,8 +363,8 @@ export default function InventoryPage() {
 
         const rawCost = costIdx !== -1 ? parseFloat(String(row[costIdx]).replace(/[^0-9.-]/g, '')) || 0 : 0;
         const rawSell = sellIdx !== -1 ? parseFloat(String(row[sellIdx]).replace(/[^0-9.-]/g, '')) || 0 : 0;
-        const rawStock = stockIdx !== -1 ? parseFloat(String(row[stockIdx]).replace(/[^0-9.-]/g, '')) || 0 : 0;
-        const rawMin = minIdx !== -1 ? parseFloat(String(row[minIdx]).replace(/[^0-9.-]/g, '')) || 5 : 5;
+        const rawStock = stockIdx !== -1 ? parseFractionOrDecimal(row[stockIdx]) : 0;
+        const rawMin = minIdx !== -1 ? parseFractionOrDecimal(row[minIdx]) || 5 : 5;
         const rawLoc = locIdx !== -1 && row[locIdx] ? String(row[locIdx]).trim() : (rawCat === 'Paints & Finishes' ? 'Paints Section' : 'Main Store');
 
         parsed.push({
@@ -545,7 +545,7 @@ export default function InventoryPage() {
                       {p.category_name}
                     </td>
                     <td className="py-3 px-3 sm:px-4 text-center font-black text-slate-900 whitespace-nowrap">
-                      {p.current_stock} <span className="text-xs text-slate-400 font-normal">{p.unit}</span>
+                      {formatQuantity(p.current_stock)} <span className="text-xs text-slate-400 font-normal">{p.unit}</span>
                     </td>
                     <td className="py-3 px-3 sm:px-4 text-right text-slate-600 whitespace-nowrap">
                       {formatCurrency(p.cost_price, currency)}
@@ -712,9 +712,8 @@ export default function InventoryPage() {
                   <label className="block text-xs font-bold text-slate-700 mb-1">Initial Stock</label>
                   <input
                     required
-                    type="number"
-                    step="any"
-                    placeholder="100"
+                    type="text"
+                    placeholder="e.g. 100 or 12 1/2"
                     value={newProd.initialStock}
                     onChange={e => setNewProd({ ...newProd, initialStock: e.target.value })}
                     className="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm font-bold text-slate-900"
@@ -724,9 +723,8 @@ export default function InventoryPage() {
                   <label className="block text-xs font-bold text-slate-700 mb-1">Min Stock Alert</label>
                   <input
                     required
-                    type="number"
-                    step="any"
-                    placeholder="10"
+                    type="text"
+                    placeholder="e.g. 5 or 2 1/2"
                     value={newProd.minimumStock}
                     onChange={e => setNewProd({ ...newProd, minimumStock: e.target.value })}
                     className="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm"
@@ -772,7 +770,7 @@ export default function InventoryPage() {
             <div className="flex justify-between items-center border-b pb-3">
               <div>
                 <h3 className="text-base font-bold text-slate-900">Adjust Stock Quantity</h3>
-                <p className="text-xs text-slate-500">{showAdjustModal.name} (Current: {showAdjustModal.current_stock} {showAdjustModal.unit})</p>
+                <p className="text-xs text-slate-500">{showAdjustModal.name} (Current: {formatQuantity(showAdjustModal.current_stock)} {showAdjustModal.unit})</p>
               </div>
               <button onClick={() => setShowAdjustModal(null)} className="text-slate-400 hover:text-slate-600 p-1">
                 <X className="w-5 h-5" />
@@ -784,16 +782,43 @@ export default function InventoryPage() {
                 <label className="block text-xs font-bold text-slate-700 mb-1">
                   Quantity Delta (+ to Add, - to Deduct)
                 </label>
-                <input
-                  required
-                  type="number"
-                  step="any"
-                  placeholder="e.g. -5 for broken / +10 for found"
-                  value={adjustDelta}
-                  onChange={e => setAdjustDelta(e.target.value)}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono font-black"
-                  autoFocus
-                />
+                <div className="space-y-2">
+                  <input
+                    required
+                    type="text"
+                    placeholder="e.g. +10, -5, +1/2, -1/4, +0.5"
+                    value={adjustDelta}
+                    onChange={e => setAdjustDelta(e.target.value)}
+                    className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono font-black"
+                    autoFocus
+                  />
+                  <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                    <span className="text-[10px] text-slate-400 font-semibold mr-1">Quick Add:</span>
+                    {['+1/4', '+1/2', '+3/4', '+1', '+5', '+10'].map(val => (
+                      <button
+                        key={val}
+                        type="button"
+                        onClick={() => setAdjustDelta(val)}
+                        className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 rounded text-xs font-bold font-mono transition"
+                      >
+                        {val}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-[10px] text-slate-400 font-semibold mr-1">Quick Deduct:</span>
+                    {['-1/4', '-1/2', '-3/4', '-1', '-5', '-10'].map(val => (
+                      <button
+                        key={val}
+                        type="button"
+                        onClick={() => setAdjustDelta(val)}
+                        className="px-2 py-0.5 bg-red-50 hover:bg-red-100 active:bg-red-200 text-red-700 rounded text-xs font-bold font-mono transition"
+                      >
+                        {val}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -871,14 +896,14 @@ export default function InventoryPage() {
                         }`}>
                           {m.movement_type}
                         </span>
-                        <span>{m.quantity > 0 ? `+${m.quantity}` : m.quantity} units</span>
+                        <span>{m.quantity > 0 ? `+${formatQuantity(m.quantity)}` : formatQuantity(m.quantity)} units</span>
                       </div>
                       <div className="text-[11px] text-slate-500 mt-0.5">{formatDateTime(m.created_at)} · By {m.performed_by}</div>
                       {m.reason && <div className="text-[11px] text-slate-600 italic">{m.reason}</div>}
                     </div>
                     <div className="text-right text-slate-600 text-[11px] font-mono">
-                      <div>Prev: {m.previous_stock}</div>
-                      <div className="font-bold text-slate-900">New: {m.new_stock}</div>
+                      <div>Prev: {formatQuantity(m.previous_stock)}</div>
+                      <div className="font-bold text-slate-900">New: {formatQuantity(m.new_stock)}</div>
                     </div>
                   </div>
                 ))
@@ -1012,8 +1037,8 @@ export default function InventoryPage() {
                   <label className="block text-xs font-bold text-slate-700 mb-1">Min Stock Alert</label>
                   <input
                     required
-                    type="number"
-                    step="any"
+                    type="text"
+                    placeholder="e.g. 5 or 2 1/2"
                     value={editForm.minimumStock}
                     onChange={e => setEditForm({ ...editForm, minimumStock: e.target.value })}
                     className="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm font-semibold"
@@ -1031,7 +1056,7 @@ export default function InventoryPage() {
               </div>
 
               <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-500 text-[11px] flex items-center justify-between">
-                <span>Current Stock: <strong>{showEditModal.current_stock} {showEditModal.unit}</strong></span>
+                <span>Current Stock: <strong>{formatQuantity(showEditModal.current_stock)} {showEditModal.unit}</strong></span>
                 <span className="text-[10px] text-slate-400">Use "Adjust" button on table to record stock level changes</span>
               </div>
 
