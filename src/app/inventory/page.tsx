@@ -268,12 +268,22 @@ export default function InventoryPage() {
     try {
       const dataBuffer = await file.arrayBuffer();
       const workbook = XLSX.read(dataBuffer, { type: 'array' });
-      const firstSheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[firstSheetName];
+      
+      // Auto-detect target sheet (prefer sheets with 'import', 'inventory', 'product', 'paint')
+      let targetSheetName = workbook.SheetNames[0];
+      for (const sName of workbook.SheetNames) {
+        const lower = sName.toLowerCase();
+        if (lower.includes('import') || lower.includes('inventory') || lower.includes('product') || lower.includes('paint')) {
+          targetSheetName = sName;
+          break;
+        }
+      }
+
+      const worksheet = workbook.Sheets[targetSheetName];
       const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
 
       if (!rawRows || rawRows.length < 2) {
-        setBulkErrors(['The selected spreadsheet is empty or has no data rows.']);
+        setBulkErrors([`The selected sheet "${targetSheetName}" is empty or has no data rows.`]);
         setParsedBulkProducts([]);
         return;
       }
@@ -284,19 +294,23 @@ export default function InventoryPage() {
         return headerRow.findIndex(h => aliases.some(alias => h.includes(alias.toLowerCase().replace(/[\s_\-()]/g, ''))));
       };
 
-      const nameIdx = findCol(['productname', 'name', 'itemname', 'description', 'product', 'item']);
+      const nameIdx = findCol(['productname', 'itemname', 'description', 'product', 'item', 'name']);
+      const paintTypeIdx = findCol(['painttype', 'paint', 'type', 'brand']);
+      const colorIdx = findCol(['color', 'colour', 'shade']);
+      const sizeIdx = findCol(['size', 'volume', 'capacity', 'can']);
+
       const skuIdx = findCol(['sku', 'code', 'itemcode', 'skucode', 'partnumber', 'model']);
       const barcodeIdx = findCol(['barcode', 'bar_code', 'upc', 'ean']);
       const catIdx = findCol(['category', 'categoryname', 'dept', 'department']);
       const unitIdx = findCol(['unit', 'uom', 'unitofmeasure', 'measure']);
       const costIdx = findCol(['costprice', 'cost', 'buyingprice', 'buyprice', 'purchaseprice']);
       const sellIdx = findCol(['sellingprice', 'sellprice', 'price', 'retailprice', 'retail']);
-      const stockIdx = findCol(['currentstock', 'stock', 'initialstock', 'qty', 'quantity', 'balance']);
-      const minIdx = findCol(['minimumstock', 'minstock', 'reorderlevel', 'alertstock', 'min']);
+      const stockIdx = findCol(['currentstock', 'stock', 'initialstock', 'qty', 'quantity', 'balance', 'stockavailable', 'available']);
+      const minIdx = findCol(['minimumstock', 'minstock', 'reorderlevel', 'alertstock', 'stockalert', 'alert', 'min']);
       const locIdx = findCol(['location', 'bin', 'shelf', 'storagelocation', 'bay', 'shed']);
 
-      if (nameIdx === -1) {
-        setBulkErrors(['Could not find a "Product Name" or "Name" column header. Please check your column headers.']);
+      if (nameIdx === -1 && paintTypeIdx === -1) {
+        setBulkErrors(['Could not find a "Product Name" or "Paint Type" column header. Please check your column headers.']);
         setParsedBulkProducts([]);
         return;
       }
@@ -310,7 +324,16 @@ export default function InventoryPage() {
           continue;
         }
 
-        const rawName = String(row[nameIdx] || '').trim();
+        let rawName = '';
+        if (nameIdx !== -1 && row[nameIdx]) {
+          rawName = String(row[nameIdx]).trim();
+        } else if (paintTypeIdx !== -1 && row[paintTypeIdx]) {
+          const ptype = String(row[paintTypeIdx] || '').trim();
+          const pcolor = colorIdx !== -1 && row[colorIdx] ? String(row[colorIdx]).trim() : '';
+          const psize = sizeIdx !== -1 && row[sizeIdx] ? String(row[sizeIdx]).trim() : '';
+          rawName = [ptype, pcolor, psize].filter(Boolean).join(' ');
+        }
+
         if (!rawName) {
           errors.push(`Row ${i + 1}: Missing product name, skipped.`);
           continue;
@@ -322,14 +345,27 @@ export default function InventoryPage() {
           rawSku = `${prefix}-${Math.floor(1000 + Math.random() * 9000)}`;
         }
 
-        const rawBarcode = barcodeIdx !== -1 ? String(row[barcodeIdx] || '').trim() : '';
-        const rawCat = catIdx !== -1 && row[catIdx] ? String(row[catIdx]).trim() : 'Building Materials';
-        const rawUnit = unitIdx !== -1 && row[unitIdx] ? String(row[unitIdx]).trim() : 'pcs';
+        const rawBarcode = barcodeIdx !== -1 && row[barcodeIdx] ? String(row[barcodeIdx]).trim() : '';
+        let rawCat = catIdx !== -1 && row[catIdx] ? String(row[catIdx]).trim() : 'General';
+        if (rawCat.toLowerCase().includes('paint')) {
+          rawCat = 'Paints & Finishes';
+        }
+
+        let rawUnit = unitIdx !== -1 && row[unitIdx] ? String(row[unitIdx]).trim() : '';
+        if (!rawUnit && sizeIdx !== -1 && row[sizeIdx]) {
+          const sizeStr = String(row[sizeIdx]).trim().toLowerCase();
+          if (sizeStr.endsWith('l')) rawUnit = 'litres';
+          else if (sizeStr.endsWith('kg')) rawUnit = 'kg';
+          else if (sizeStr.endsWith('m')) rawUnit = 'meters';
+          else rawUnit = 'pcs';
+        }
+        if (!rawUnit) rawUnit = 'pcs';
+
         const rawCost = costIdx !== -1 ? parseFloat(String(row[costIdx]).replace(/[^0-9.-]/g, '')) || 0 : 0;
         const rawSell = sellIdx !== -1 ? parseFloat(String(row[sellIdx]).replace(/[^0-9.-]/g, '')) || 0 : 0;
         const rawStock = stockIdx !== -1 ? parseFloat(String(row[stockIdx]).replace(/[^0-9.-]/g, '')) || 0 : 0;
         const rawMin = minIdx !== -1 ? parseFloat(String(row[minIdx]).replace(/[^0-9.-]/g, '')) || 5 : 5;
-        const rawLoc = locIdx !== -1 && row[locIdx] ? String(row[locIdx]).trim() : 'Main Store';
+        const rawLoc = locIdx !== -1 && row[locIdx] ? String(row[locIdx]).trim() : (rawCat === 'Paints & Finishes' ? 'Paints Section' : 'Main Store');
 
         parsed.push({
           name: rawName,
