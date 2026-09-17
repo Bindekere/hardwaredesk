@@ -104,4 +104,17 @@ class PurchaseCreate(BaseModel):
 class StockCountItemCreate(BaseModel):
     product_id: str
     physical_quantity: int
-    reason: str
+    system_quantity: Optional[int] = None
+    variance: Optional[int] = None
+    reason: Optional[str] = "Stock Take Count"
+
+class StockTakeAdjustmentItem(BaseModel):
+    product_id: str
+    physical_quantity: int
+    system_quantity: Optional[int] = None
+    variance: Optional[int] = None
+    reason: Optional[str] = "Stock Take Adjustment"
+
+class StockTakeSubmission(BaseModel):
+    items: List[StockTakeAdjustmentItem]
+    notes: Optional[str] = None

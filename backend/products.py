@@ -38,6 +38,37 @@ def get_products(search: Optional[str] = None, category: Optional[str] = None):
         results = [p for p in results if p["category_id"] == category]
     return results
 
+@router.post("/bulk")
+def bulk_create_products(products: List[ProductCreate]):
+    items = []
+    for p in products:
+        d = p.dict()
+        d.setdefault("active", True)
+        if not d.get("id"):
+            d["id"] = str(uuid.uuid4())
+        items.append(d)
+    
+    saved_items = []
+    # Always keep in-memory DB synchronized
+    for item in items:
+        existing = next((p for p in PRODUCTS_DB if p["sku"] == item["sku"]), None)
+        if existing:
+            existing.update(item)
+            saved_items.append(existing)
+        else:
+            PRODUCTS_DB.append(item)
+            saved_items.append(item)
+
+    if supabase:
+        try:
+            res = supabase.table("products").upsert(items, on_conflict="sku").execute()
+            return {"message": f"Successfully imported {len(items)} products", "count": len(items), "data": res.data or saved_items}
+        except Exception as e:
+            print(f"Supabase bulk upsert error: {e}, falling back to in-memory state")
+            return {"message": f"Saved {len(items)} products in-memory (database warning: {str(e)})", "count": len(items), "data": saved_items}
+
+    return {"message": f"Saved {len(items)} products in-memory", "count": len(items), "data": saved_items}
+
 @router.post("/", response_model=ProductResponse)
 def create_product(product: ProductCreate):
     new_p = product.dict()

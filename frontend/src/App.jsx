@@ -83,9 +83,34 @@ export default function App() {
     });
   }, []);
 
+  const refreshProducts = async () => {
+    const prods = await fetchProducts();
+    if (prods && prods.length > 0) {
+      setProductsList(prods);
+    }
+  };
+
   // Shared state handlers for products
   const handleAddProduct = (newProd) => {
     setProductsList(prev => [...prev, newProd]);
+  };
+
+  const handleBulkImport = (importedProducts) => {
+    if (importedProducts && importedProducts.length > 0) {
+      setProductsList(prev => {
+        const map = new Map(prev.map(p => [p.sku, p]));
+        importedProducts.forEach(item => {
+          const existing = map.get(item.sku);
+          if (existing) {
+            map.set(item.sku, { ...existing, ...item });
+          } else {
+            map.set(item.sku, { id: item.id || `prod-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`, ...item });
+          }
+        });
+        return Array.from(map.values());
+      });
+    }
+    refreshProducts();
   };
 
   const handleDeleteProduct = (prodId) => {
@@ -99,6 +124,19 @@ export default function App() {
       }
       return p;
     }));
+  };
+
+  const handleStockTakeFinalize = (updatedItems) => {
+    if (updatedItems && updatedItems.length > 0) {
+      setProductsList(prev => prev.map(p => {
+        const match = updatedItems.find(u => u.id === p.id || u.product_id === p.id || u.sku === p.sku);
+        if (match) {
+          return { ...p, stock_quantity: match.stock_quantity !== undefined ? match.stock_quantity : match.physical_quantity };
+        }
+        return p;
+      }));
+    }
+    refreshProducts();
   };
 
   // When a sale is completed:
@@ -256,6 +294,8 @@ export default function App() {
                 onAddProduct={handleAddProduct}
                 onDeleteProduct={handleDeleteProduct}
                 onAdjustStock={handleAdjustStock}
+                onBulkImport={handleBulkImport}
+                onReload={refreshProducts}
               />
             </div>
           ) : activeTab === 'Purchases' ? (
@@ -263,7 +303,12 @@ export default function App() {
           ) : activeTab === 'Debtors & Creditors' || activeTab === 'Customers & Debtors' || activeTab === 'Suppliers & Creditors' ? (
             <DebtorsCreditorsLedgerView onAddReceipt={handleSaleComplete} />
           ) : activeTab === 'Stock Take' ? (
-            <StockTakeView userRole={userRole} />
+            <StockTakeView 
+              userRole={userRole} 
+              products={productsList}
+              onStockTakeFinalize={handleStockTakeFinalize}
+              onReload={refreshProducts}
+            />
           ) : activeTab === 'Reports' ? (
             <ReportsView />
           ) : activeTab === 'Receipt Book' ? (
