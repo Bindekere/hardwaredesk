@@ -118,7 +118,7 @@ export default function StockTakeView({ userRole, products, onStockTakeFinalize,
     if (!file) return;
 
     try {
-      if (file.name.endsWith('.csv')) {
+      if (file.name.toLowerCase().endsWith('.csv')) {
         const reader = new FileReader();
         reader.onload = (evt) => {
           try {
