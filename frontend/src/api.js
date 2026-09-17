@@ -25,6 +25,21 @@ export async function createProductApi(product) {
   }
 }
 
+export async function updateProductApi(productId, updateData) {
+  try {
+    const res = await fetch(`${API_BASE}/products/${productId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updateData)
+    });
+    if (!res.ok) throw new Error(`Update failed with status ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn('Backend offline, updated locally:', err);
+    return null;
+  }
+}
+
 export async function bulkImportProductsApi(products) {
   try {
     const res = await fetch(`${API_BASE}/products/bulk`, {

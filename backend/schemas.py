@@ -43,6 +43,10 @@ class ProductUpdate(BaseModel):
     sku: Optional[str] = None
     barcode: Optional[str] = None
     name: Optional[str] = None
+    category_id: Optional[str] = None
+    supplier_id: Optional[str] = None
+    storage_location_id: Optional[str] = None
+    unit: Optional[str] = None
     cost_price: Optional[float] = None
     selling_price: Optional[float] = None
     stock_quantity: Optional[int] = None

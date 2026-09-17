@@ -89,18 +89,23 @@ def create_product(product: ProductCreate):
 def update_product(product_id: str, product_update: ProductUpdate):
     update_data = product_update.dict(exclude_unset=True)
 
+    updated_item = None
     if supabase:
         try:
             result = supabase.table("products").update(update_data).eq("id", product_id).execute()
             if result.data:
-                return result.data[0]
+                updated_item = result.data[0]
         except Exception as e:
             print(f"Supabase update failed, updating in-memory: {e}")
 
     for p in PRODUCTS_DB:
-        if p["id"] == product_id:
+        if p["id"] == product_id or p.get("sku") == product_id:
             p.update(update_data)
-            return p
+            return updated_item or p
+
+    if updated_item:
+        return updated_item
+
     raise HTTPException(status_code=404, detail="Product not found")
 
 @router.delete("/{product_id}")

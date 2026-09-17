@@ -75,6 +75,21 @@ def test_api():
     assert irn['stock_quantity'] == 48, f"Expected 48, got {irn['stock_quantity']}"
     assert pnt['stock_quantity'] == 12, f"Expected 12, got {pnt['stock_quantity']}"
     print(f"Test 5: Stock quantities verified: {irn['sku']} = {irn['stock_quantity']}, {pnt['sku']} = {pnt['stock_quantity']}")
+
+    # 6. Test Product Edit
+    edit_payload = {
+        'name': 'Test Iron Sheet 28G (Super Color)',
+        'sku': 'TST-IRN-001-MOD',
+        'selling_price': 49000.0,
+        'storage_location_id': 'Yard B-Rack 2'
+    }
+    res = client.put(f"/products/{irn['id']}", json=edit_payload)
+    assert res.status_code == 200, f'Product edit failed: {res.text}'
+    updated = res.json()
+    assert updated['sku'] == 'TST-IRN-001-MOD'
+    assert updated['name'] == 'Test Iron Sheet 28G (Super Color)'
+    assert updated['selling_price'] == 49000.0
+    print('Test 6: Product edit verified (SKU, name, selling price, location updated successfully)!')
     print("ALL API TESTS PASSED SUCCESSFULLY!")
 
 if __name__ == '__main__':

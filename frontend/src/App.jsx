@@ -117,6 +117,15 @@ export default function App() {
     setProductsList(prev => prev.filter(p => p.id !== prodId));
   };
 
+  const handleUpdateProduct = (updatedProd) => {
+    setProductsList(prev => prev.map(p => {
+      if (p.id === updatedProd.id || (updatedProd.sku && p.sku === updatedProd.sku)) {
+        return { ...p, ...updatedProd };
+      }
+      return p;
+    }));
+  };
+
   const handleAdjustStock = (prodId, delta) => {
     setProductsList(prev => prev.map(p => {
       if (p.id === prodId) {
@@ -292,6 +301,7 @@ export default function App() {
                 userRole={userRole} 
                 products={productsList}
                 onAddProduct={handleAddProduct}
+                onUpdateProduct={handleUpdateProduct}
                 onDeleteProduct={handleDeleteProduct}
                 onAdjustStock={handleAdjustStock}
                 onBulkImport={handleBulkImport}

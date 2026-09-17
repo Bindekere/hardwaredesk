@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import readXlsxFile from 'read-excel-file/browser';
-import { createProductApi, deleteProductApi, bulkImportProductsApi } from './api';
+import { createProductApi, deleteProductApi, bulkImportProductsApi, updateProductApi } from './api';
 
 function parseCSV(text) {
   const lines = [];
@@ -34,11 +34,16 @@ function parseCSV(text) {
   return lines;
 }
 
-export default function InventoryView({ userRole, products, onAddProduct, onDeleteProduct, onAdjustStock, onBulkImport, onReload }) {
+export default function InventoryView({ userRole, products, onAddProduct, onUpdateProduct, onDeleteProduct, onAdjustStock, onBulkImport, onReload }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showAdjustModal, setShowAdjustModal] = useState(null);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(null);
+
+  // Edit Product Modal State
+  const [showEditModal, setShowEditModal] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // Bulk Import Modal State
   const [showImportModal, setShowImportModal] = useState(false);
@@ -56,6 +61,45 @@ export default function InventoryView({ userRole, products, onAddProduct, onDele
 
   const [adjustQty, setAdjustQty] = useState('');
   const [adjustReason, setAdjustReason] = useState('DAMAGE');
+
+  const openEditModal = (product) => {
+    setShowEditModal(product);
+    setEditFormData({
+      id: product.id,
+      name: product.name || '',
+      sku: product.sku || '',
+      barcode: product.barcode || '',
+      category_id: product.category_id || product.category || 'Building',
+      unit: product.unit || 'pcs',
+      cost_price: product.cost_price !== undefined ? product.cost_price : '',
+      selling_price: product.selling_price !== undefined ? product.selling_price : '',
+      stock_quantity: product.stock_quantity !== undefined ? product.stock_quantity : 0,
+      minimum_stock: product.minimum_stock !== undefined ? product.minimum_stock : 5,
+      storage_location_id: product.storage_location_id || product.location || 'Main Store'
+    });
+  };
+
+  const handleSaveEdit = async (e) => {
+    e.preventDefault();
+    if (!showEditModal) return;
+
+    setIsUpdating(true);
+    const updatedData = {
+      ...editFormData,
+      cost_price: parseFloat(editFormData.cost_price) || 0,
+      selling_price: parseFloat(editFormData.selling_price) || 0,
+      stock_quantity: parseInt(editFormData.stock_quantity) || 0,
+      minimum_stock: parseInt(editFormData.minimum_stock) || 5
+    };
+
+    if (onUpdateProduct) {
+      onUpdateProduct(updatedData);
+    }
+
+    await updateProductApi(showEditModal.id, updatedData);
+    setIsUpdating(false);
+    setShowEditModal(null);
+  };
 
   const filteredProducts = (products || []).filter(p => 
     (p.name || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -329,17 +373,24 @@ export default function InventoryView({ userRole, products, onAddProduct, onDele
                     <td className="py-3 px-4 font-mono text-xs text-gray-500">{p.storage_location_id || p.location || 'Store'}</td>
                     <td className="py-3 px-4">{getStockBadge(p.stock_quantity, p.minimum_stock)}</td>
                     {userRole !== 'VIEWER' && (
-                      <td className="py-3 px-4 text-right space-x-1">
+                      <td className="py-3 px-4 text-right space-x-1 whitespace-nowrap">
+                        <button 
+                          onClick={() => openEditModal(p)}
+                          className="text-xs bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold px-2.5 py-1 rounded border border-amber-200 transition"
+                          title="Edit Product Details"
+                        >
+                          Edit
+                        </button>
                         <button 
                           onClick={() => setShowAdjustModal(p)}
-                          className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-2.5 py-1 rounded"
+                          className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-2.5 py-1 rounded transition"
                         >
                           Adjust
                         </button>
                         {(userRole === 'ADMIN' || userRole === 'STOREKEEPER') && (
                           <button 
                             onClick={() => setConfirmDeleteModal(p)}
-                            className="text-xs bg-red-50 hover:bg-red-100 text-red-600 font-medium px-2 py-1 rounded border border-red-200"
+                            className="text-xs bg-red-50 hover:bg-red-100 text-red-600 font-medium px-2 py-1 rounded border border-red-200 transition"
                             title="Delete Product"
                           >
                             Delete
@@ -535,6 +586,164 @@ export default function InventoryView({ userRole, products, onAddProduct, onDele
               <div className="flex justify-end space-x-2 pt-3 border-t">
                 <button type="button" onClick={() => setShowAddModal(false)} className="px-4 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded">Cancel</button>
                 <button type="submit" className="px-4 py-1.5 text-xs bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold rounded">Save Product</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Product Modal */}
+      {showEditModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b pb-3">
+              <div>
+                <h3 className="font-bold text-gray-800 text-base">✏️ Edit Product Details</h3>
+                <p className="text-xs text-gray-500">Update item name, SKU code, prices, stock, or location.</p>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setShowEditModal(null)}
+                className="text-gray-400 hover:text-gray-600 text-lg font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEdit} className="space-y-3 text-sm">
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Product Name</label>
+                <input 
+                  required 
+                  type="text" 
+                  className="w-full border border-gray-300 rounded px-3 py-1.5 focus:ring-1 focus:ring-amber-500" 
+                  value={editFormData.name || ''} 
+                  onChange={e => setEditFormData({ ...editFormData, name: e.target.value })} 
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">SKU Code</label>
+                  <input 
+                    required 
+                    type="text" 
+                    className="w-full border border-gray-300 rounded px-3 py-1.5 font-mono focus:ring-1 focus:ring-amber-500 font-bold" 
+                    value={editFormData.sku || ''} 
+                    onChange={e => setEditFormData({ ...editFormData, sku: e.target.value })} 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Barcode (Optional)</label>
+                  <input 
+                    type="text" 
+                    className="w-full border border-gray-300 rounded px-3 py-1.5 font-mono focus:ring-1 focus:ring-amber-500" 
+                    value={editFormData.barcode || ''} 
+                    onChange={e => setEditFormData({ ...editFormData, barcode: e.target.value })} 
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Category</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g. Building, Paint, Plumbing"
+                    className="w-full border border-gray-300 rounded px-3 py-1.5 focus:ring-1 focus:ring-amber-500" 
+                    value={editFormData.category_id || ''} 
+                    onChange={e => setEditFormData({ ...editFormData, category_id: e.target.value })} 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Unit of Measure</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g. pcs, bag, tin, kg"
+                    className="w-full border border-gray-300 rounded px-3 py-1.5 focus:ring-1 focus:ring-amber-500" 
+                    value={editFormData.unit || ''} 
+                    onChange={e => setEditFormData({ ...editFormData, unit: e.target.value })} 
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Cost Price (UGX)</label>
+                  <input 
+                    required 
+                    type="number" 
+                    min="0"
+                    step="any"
+                    className="w-full border border-gray-300 rounded px-3 py-1.5 font-mono focus:ring-1 focus:ring-amber-500" 
+                    value={editFormData.cost_price !== undefined ? editFormData.cost_price : ''} 
+                    onChange={e => setEditFormData({ ...editFormData, cost_price: e.target.value })} 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Selling Price (UGX)</label>
+                  <input 
+                    required 
+                    type="number" 
+                    min="0"
+                    step="any"
+                    className="w-full border border-gray-300 rounded px-3 py-1.5 font-mono font-bold focus:ring-1 focus:ring-amber-500 text-amber-700" 
+                    value={editFormData.selling_price !== undefined ? editFormData.selling_price : ''} 
+                    onChange={e => setEditFormData({ ...editFormData, selling_price: e.target.value })} 
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Current Stock</label>
+                  <input 
+                    required 
+                    type="number" 
+                    min="0"
+                    className="w-full border border-gray-300 rounded px-3 py-1.5 font-mono font-bold focus:ring-1 focus:ring-amber-500" 
+                    value={editFormData.stock_quantity !== undefined ? editFormData.stock_quantity : ''} 
+                    onChange={e => setEditFormData({ ...editFormData, stock_quantity: e.target.value })} 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Alert Min Stock</label>
+                  <input 
+                    required 
+                    type="number" 
+                    min="0"
+                    className="w-full border border-gray-300 rounded px-3 py-1.5 font-mono focus:ring-1 focus:ring-amber-500" 
+                    value={editFormData.minimum_stock !== undefined ? editFormData.minimum_stock : ''} 
+                    onChange={e => setEditFormData({ ...editFormData, minimum_stock: e.target.value })} 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Storage Location</label>
+                  <input 
+                    type="text" 
+                    placeholder="A1-S1-B1"
+                    className="w-full border border-gray-300 rounded px-3 py-1.5 focus:ring-1 focus:ring-amber-500" 
+                    value={editFormData.storage_location_id || ''} 
+                    onChange={e => setEditFormData({ ...editFormData, storage_location_id: e.target.value })} 
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-4 border-t">
+                <button 
+                  type="button" 
+                  onClick={() => setShowEditModal(null)} 
+                  className="px-4 py-2 text-xs text-gray-600 hover:bg-gray-100 rounded font-medium"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={isUpdating}
+                  className="px-5 py-2 text-xs bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold rounded shadow transition disabled:bg-gray-200"
+                >
+                  {isUpdating ? 'Saving Changes...' : 'Save Product Changes'}
+                </button>
               </div>
             </form>
           </div>
