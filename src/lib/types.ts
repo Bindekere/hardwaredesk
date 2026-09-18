@@ -237,6 +237,26 @@ export interface StockTakeItem {
   created_at: string;
 }
 
+export interface InventoryCategoryValuation {
+  category: string;
+  itemCount: number;
+  totalUnits: number;
+  costValue: number;
+  retailValue: number;
+  potentialProfit: number;
+  profitMarginPercent: number;
+}
+
+export interface InventoryAssetValuation {
+  totalCostValue: number;
+  totalRetailValue: number;
+  potentialProfit: number;
+  profitMarginPercent: number;
+  totalProductsCount: number;
+  totalUnitsInStock: number;
+  categoryBreakdown: InventoryCategoryValuation[];
+}
+
 export interface FinancialReportSummary {
   period: string;
   totalRevenue: number;
@@ -248,6 +268,7 @@ export interface FinancialReportSummary {
   netCashFlow: number;
   totalSalesCount: number;
   totalItemsSold: number;
+  inventoryValuation?: InventoryAssetValuation;
   salesBreakdown: Array<{
     id: string;
     receipt_number: string;

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useTransition, useRef } from 'react';
+import React, { useState, useEffect, useTransition, useRef, useMemo } from 'react';
 import { useApp } from '@/components/AppProvider';
 import { getProducts, createProduct, adjustStock, getProductMovements, updateProduct, bulkImportProducts } from '@/actions/products';
 import { Product, InventoryMovement, MovementType } from '@/lib/types';
@@ -23,6 +23,10 @@ import {
   Download,
   Check,
   FileText,
+  Coins,
+  CircleDollarSign,
+  TrendingUp,
+  Layers,
 } from 'lucide-react';
 
 export default function InventoryPage() {
@@ -105,6 +109,38 @@ export default function InventoryPage() {
 
     return matchesSearch && matchesCategory;
   });
+
+  const stockValuation = useMemo(() => {
+    let totalCost = 0;
+    let totalRetail = 0;
+    let inStockItemsCount = 0;
+    let totalUnits = 0;
+
+    products.forEach(p => {
+      const stock = Math.max(0, Number(p.current_stock || 0));
+      const cost = Math.max(0, Number(p.cost_price || 0));
+      const retail = Math.max(0, Number(p.selling_price || 0));
+
+      if (stock > 0) {
+        totalCost += stock * cost;
+        totalRetail += stock * retail;
+        inStockItemsCount += 1;
+        totalUnits += stock;
+      }
+    });
+
+    const potentialProfit = totalRetail - totalCost;
+    const marginPercent = totalRetail > 0 ? Number(((potentialProfit / totalRetail) * 100).toFixed(1)) : 0;
+
+    return {
+      totalCost,
+      totalRetail,
+      potentialProfit,
+      marginPercent,
+      inStockItemsCount,
+      totalUnits: Math.round(totalUnits * 100) / 100,
+    };
+  }, [products]);
 
   const getStockBadge = (stock: number, min: number) => {
     if (stock <= 0) {
@@ -470,6 +506,79 @@ export default function InventoryPage() {
             <span>{errorMsg}</span>
           </div>
           <button onClick={() => setErrorMsg(null)} className="text-red-500 font-bold p-1">✕</button>
+        </div>
+      )}
+
+      {/* Admin-Only Tentative Stock Cost & Asset Valuation Ribbon */}
+      {userRole === 'ADMIN' && (
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="bg-white p-4 rounded-xl shadow-xs border border-slate-200 hover:border-slate-300 transition">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                Total Stock at Cost
+              </span>
+              <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600">
+                <Coins className="w-4 h-4" />
+              </div>
+            </div>
+            <p className="text-lg sm:text-xl lg:text-2xl font-black text-slate-900 mt-1">
+              {loading ? '...' : formatCurrency(stockValuation.totalCost, currency)}
+            </p>
+            <span className="text-[11px] text-slate-400 mt-0.5 block">
+              Tentative capital invested in stock
+            </span>
+          </div>
+
+          <div className="bg-white p-4 rounded-xl shadow-xs border border-slate-200 hover:border-slate-300 transition">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                Expected Retail Value
+              </span>
+              <div className="p-1.5 rounded-lg bg-amber-50 text-amber-600">
+                <CircleDollarSign className="w-4 h-4" />
+              </div>
+            </div>
+            <p className="text-lg sm:text-xl lg:text-2xl font-black text-amber-600 mt-1">
+              {loading ? '...' : formatCurrency(stockValuation.totalRetail, currency)}
+            </p>
+            <span className="text-[11px] text-slate-400 mt-0.5 block">
+              Potential turnover upon full sale
+            </span>
+          </div>
+
+          <div className="bg-white p-4 rounded-xl shadow-xs border border-slate-200 hover:border-slate-300 transition">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                Potential Gross Margin
+              </span>
+              <div className="p-1.5 rounded-lg bg-green-50 text-green-600">
+                <TrendingUp className="w-4 h-4" />
+              </div>
+            </div>
+            <p className="text-lg sm:text-xl lg:text-2xl font-black text-green-600 mt-1">
+              {loading ? '...' : formatCurrency(stockValuation.potentialProfit, currency)}
+            </p>
+            <span className="text-[11px] text-green-700 font-semibold mt-0.5 block">
+              {loading ? '...' : `${stockValuation.marginPercent}% unrealized margin`}
+            </span>
+          </div>
+
+          <div className="bg-white p-4 rounded-xl shadow-xs border border-slate-200 hover:border-slate-300 transition">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                In-Stock Inventory
+              </span>
+              <div className="p-1.5 rounded-lg bg-slate-100 text-slate-700">
+                <Layers className="w-4 h-4" />
+              </div>
+            </div>
+            <p className="text-lg sm:text-xl lg:text-2xl font-black text-slate-900 mt-1">
+              {loading ? '...' : `${formatQuantity(stockValuation.totalUnits)} Units`}
+            </p>
+            <span className="text-[11px] text-slate-400 mt-0.5 block">
+              {loading ? '...' : `${stockValuation.inStockItemsCount} of ${products.length} products in stock`}
+            </span>
+          </div>
         </div>
       )}
 

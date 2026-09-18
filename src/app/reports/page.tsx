@@ -4,13 +4,19 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '@/components/AppProvider';
 import { getFinancialReport } from '@/actions/reports';
 import { FinancialReportSummary } from '@/lib/types';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency, formatQuantity } from '@/lib/formatters';
 import {
   BarChart3,
   Calendar,
   Printer,
   Download,
   Lock,
+  Coins,
+  CircleDollarSign,
+  TrendingUp,
+  Layers,
+  Store,
+  Package,
 } from 'lucide-react';
 
 export default function ReportsPage() {
@@ -96,6 +102,29 @@ export default function ReportsPage() {
       ['Total Units Sold', report.totalItemsSold],
     ];
 
+    const valuationRows = report.inventoryValuation ? [
+      [],
+      ['--- CURRENT SHOP INVENTORY VALUATION (ASSET BALANCE) ---'],
+      ['Total Stock at Cost (Capital Invested)', report.inventoryValuation.totalCostValue.toFixed(2)],
+      ['Expected Retail Turnover', report.inventoryValuation.totalRetailValue.toFixed(2)],
+      ['Potential Gross Profit', report.inventoryValuation.potentialProfit.toFixed(2)],
+      ['Potential Gross Margin', `${report.inventoryValuation.profitMarginPercent}%`],
+      ['Total Catalog Products', report.inventoryValuation.totalProductsCount],
+      ['Total Units In Stock', report.inventoryValuation.totalUnitsInStock],
+      [],
+      ['--- INVENTORY CAPITAL BY CATEGORY ---'],
+      ['Category', 'Products', 'In-Stock Units', 'Cost Value', 'Retail Value', 'Expected Profit', 'Margin %'],
+      ...report.inventoryValuation.categoryBreakdown.map(c => [
+        c.category,
+        c.itemCount,
+        c.totalUnits,
+        c.costValue.toFixed(2),
+        c.retailValue.toFixed(2),
+        c.potentialProfit.toFixed(2),
+        `${c.profitMarginPercent}%`,
+      ]),
+    ] : [];
+
     const allRows = [
       [`HardwareDesk Uganda — Financial Report (${report.period})`],
       [`Generated: ${new Date().toLocaleString()}`],
@@ -103,6 +132,7 @@ export default function ReportsPage() {
       ...salesRows,
       ...expenseRows,
       ...summaryRows,
+      ...valuationRows,
     ];
 
     const csvContent = allRows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
@@ -161,6 +191,44 @@ export default function ReportsPage() {
             <div class="metric"><div class="label">Net Cash Flow</div><div class="val ${report.netCashFlow >= 0 ? 'green' : 'red'}">${formatCurrency(report.netCashFlow, currency)}</div></div>
             <div class="metric"><div class="label">Profit Margin</div><div class="val">${report.profitMarginPercent}%</div></div>
           </div>
+
+          ${report.inventoryValuation ? `
+            <div style="margin-top: 25px; padding: 15px; background: #f8fafc; border-radius: 8px; border: 1px solid #cbd5e1;">
+              <h3 style="margin-top: 0; margin-bottom: 10px; border: none; font-size: 14px; text-transform: uppercase;">Current Shop Stock Valuation (Asset Balance)</h3>
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                <div><div style="font-size: 10px; color: #64748b; font-weight: bold;">TOTAL STOCK AT COST</div><div style="font-size: 16px; font-weight: bold; color: #0f172a;">${formatCurrency(report.inventoryValuation.totalCostValue, currency)}</div></div>
+                <div><div style="font-size: 10px; color: #64748b; font-weight: bold;">EXPECTED RETAIL VALUE</div><div style="font-size: 16px; font-weight: bold; color: #d97706;">${formatCurrency(report.inventoryValuation.totalRetailValue, currency)}</div></div>
+                <div><div style="font-size: 10px; color: #64748b; font-weight: bold;">POTENTIAL PROFIT</div><div style="font-size: 16px; font-weight: bold; color: #16a34a;">${formatCurrency(report.inventoryValuation.potentialProfit, currency)} (${report.inventoryValuation.profitMarginPercent}%)</div></div>
+                <div><div style="font-size: 10px; color: #64748b; font-weight: bold;">IN-STOCK UNITS</div><div style="font-size: 16px; font-weight: bold; color: #0f172a;">${report.inventoryValuation.totalUnitsInStock} Units</div></div>
+              </div>
+            </div>
+
+            <h3 style="margin-top: 20px;">Inventory Capital by Category</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th class="right">Products</th>
+                  <th class="right">In-Stock Units</th>
+                  <th class="right">Stock at Cost</th>
+                  <th class="right">Retail Value</th>
+                  <th class="right">Expected Profit</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${report.inventoryValuation.categoryBreakdown.map(c => `
+                  <tr>
+                    <td><strong>${c.category}</strong></td>
+                    <td class="right">${c.itemCount}</td>
+                    <td class="right">${c.totalUnits}</td>
+                    <td class="right"><strong>${formatCurrency(c.costValue, currency)}</strong></td>
+                    <td class="right">${formatCurrency(c.retailValue, currency)}</td>
+                    <td class="right green"><strong>${formatCurrency(c.potentialProfit, currency)}</strong></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          ` : ''}
 
           <h3>Sales Revenue Breakdown (${report.salesBreakdown.length} sales)</h3>
           <table>
@@ -331,6 +399,148 @@ export default function ReportsPage() {
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Profit Margin</span>
             <p className="text-lg sm:text-xl font-black text-indigo-600 mt-1">{report.profitMarginPercent}%</p>
             <span className="text-[11px] text-slate-400 mt-0.5 block">{report.totalItemsSold} total items sold</span>
+          </div>
+        </div>
+      )}
+
+      {/* Current Shop Stock Capital & Asset Balance */}
+      {report?.inventoryValuation && (
+        <div className="space-y-3 pt-1">
+          <div className="flex items-center space-x-2">
+            <Store className="w-5 h-5 text-amber-600" />
+            <div>
+              <h2 className="text-sm sm:text-base font-bold text-slate-900">
+                Current Shop Stock Valuation & Asset Balance
+              </h2>
+              <p className="text-xs text-slate-500">
+                Real-time valuation of physical goods and materials currently on store shelves
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="bg-white p-4 rounded-xl shadow-xs border border-slate-200 hover:border-slate-300 transition">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                  Total Stock at Cost
+                </span>
+                <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600">
+                  <Coins className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="text-lg sm:text-xl lg:text-2xl font-black text-slate-900 mt-1">
+                {formatCurrency(report.inventoryValuation.totalCostValue, currency)}
+              </p>
+              <span className="text-[11px] text-slate-400 mt-0.5 block">
+                Tentative capital invested in stock
+              </span>
+            </div>
+
+            <div className="bg-white p-4 rounded-xl shadow-xs border border-slate-200 hover:border-slate-300 transition">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                  Expected Retail Value
+                </span>
+                <div className="p-1.5 rounded-lg bg-amber-50 text-amber-600">
+                  <CircleDollarSign className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="text-lg sm:text-xl lg:text-2xl font-black text-amber-600 mt-1">
+                {formatCurrency(report.inventoryValuation.totalRetailValue, currency)}
+              </p>
+              <span className="text-[11px] text-slate-400 mt-0.5 block">
+                Potential turnover upon full sale
+              </span>
+            </div>
+
+            <div className="bg-white p-4 rounded-xl shadow-xs border border-slate-200 hover:border-slate-300 transition">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                  Potential Gross Profit
+                </span>
+                <div className="p-1.5 rounded-lg bg-green-50 text-green-600">
+                  <TrendingUp className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="text-lg sm:text-xl lg:text-2xl font-black text-green-600 mt-1">
+                {formatCurrency(report.inventoryValuation.potentialProfit, currency)}
+              </p>
+              <span className="text-[11px] text-green-700 font-semibold mt-0.5 block">
+                {report.inventoryValuation.profitMarginPercent}% projected margin
+              </span>
+            </div>
+
+            <div className="bg-white p-4 rounded-xl shadow-xs border border-slate-200 hover:border-slate-300 transition">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                  Units in Stock
+                </span>
+                <div className="p-1.5 rounded-lg bg-slate-100 text-slate-700">
+                  <Layers className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="text-lg sm:text-xl lg:text-2xl font-black text-slate-900 mt-1">
+                {formatQuantity(report.inventoryValuation.totalUnitsInStock)} Units
+              </p>
+              <span className="text-[11px] text-slate-400 mt-0.5 block">
+                Across {report.inventoryValuation.totalProductsCount} catalog items
+              </span>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
+            <div className="p-3.5 sm:p-4 border-b bg-slate-50 flex justify-between items-center">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
+                <Package className="w-4 h-4 text-amber-500" />
+                <span>Inventory Capital by Category</span>
+              </h3>
+              <span className="text-xs text-slate-500">
+                {report.inventoryValuation.categoryBreakdown.length} departments
+              </span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead className="bg-slate-100 text-slate-700 text-[10px] uppercase tracking-wider border-b border-slate-200">
+                  <tr>
+                    <th className="py-2.5 px-3">Category / Department</th>
+                    <th className="py-2.5 px-3 text-center">Products</th>
+                    <th className="py-2.5 px-3 text-center">In-Stock Units</th>
+                    <th className="py-2.5 px-3 text-right">Stock at Cost</th>
+                    <th className="py-2.5 px-3 text-right">Retail Value</th>
+                    <th className="py-2.5 px-3 text-right">Expected Profit</th>
+                    <th className="py-2.5 px-3 text-right">Margin %</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {report.inventoryValuation.categoryBreakdown.map((cat, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50 transition">
+                      <td className="py-2.5 px-3 font-bold text-slate-900">
+                        {cat.category}
+                      </td>
+                      <td className="py-2.5 px-3 text-center text-slate-600 font-mono">
+                        {cat.itemCount}
+                      </td>
+                      <td className="py-2.5 px-3 text-center font-bold text-slate-800 font-mono">
+                        {formatQuantity(cat.totalUnits)}
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900">
+                        {formatCurrency(cat.costValue, currency)}
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono text-amber-600 font-semibold">
+                        {formatCurrency(cat.retailValue, currency)}
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-black text-green-600">
+                        {formatCurrency(cat.potentialProfit, currency)}
+                      </td>
+                      <td className="py-2.5 px-3 text-right font-mono font-bold text-indigo-600">
+                        {cat.profitMarginPercent}%
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
