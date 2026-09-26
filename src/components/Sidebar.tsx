@@ -16,6 +16,7 @@ import {
   Lock,
   LogOut,
 } from 'lucide-react';
+import { InstallAppButton } from '@/components/PwaInstallPrompt';
 
 interface SidebarProps {
   userRole: UserRole;
@@ -91,7 +92,9 @@ export default function Sidebar({
           })}
         </div>
 
-        <div className="pt-4 border-t border-slate-700/60 text-xs text-slate-400 px-2 space-y-3">
+        <div className="pt-4 border-t border-slate-700/60 text-xs text-slate-400 px-2 space-y-2">
+          <InstallAppButton className="w-full justify-center" />
+
           {onLogout && (
             <button
               onClick={onLogout}

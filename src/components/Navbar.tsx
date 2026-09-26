@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { UserRole } from '@/lib/types';
 import { ShoppingCart, Search, Menu, X, Shield, PlusCircle, LogOut, Lock } from 'lucide-react';
+import { InstallAppButton } from '@/components/PwaInstallPrompt';
 
 interface NavbarProps {
   userRole: UserRole;
@@ -148,6 +149,9 @@ export default function Navbar({
             USD ($)
           </button>
         </div>
+
+        {/* Install App on Device */}
+        <InstallAppButton className="hidden sm:inline-flex" />
 
         {/* Authenticated Role Badge & Lock/Logout Button */}
         <div className="flex items-center space-x-1.5 text-xs bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 whitespace-nowrap">
