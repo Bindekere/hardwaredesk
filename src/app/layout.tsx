@@ -43,12 +43,15 @@ export default function RootLayout({
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="HardwareDesk" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
       </head>
       <body className="antialiased selection:bg-amber-500 selection:text-slate-950">
+        <PwaInstallPrompt />
         <AppProvider>
           {children}
-          <PwaInstallPrompt />
         </AppProvider>
       </body>
     </html>

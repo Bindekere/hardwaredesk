@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { UserRole } from '@/lib/types';
 import { Shield, KeyRound, Lock, ArrowRight, AlertCircle, Store, CheckCircle2 } from 'lucide-react';
+import { InstallAppButton } from '@/components/PwaInstallPrompt';
 
 interface LoginScreenProps {
   onLogin: (role: UserRole) => void;
@@ -186,6 +187,8 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
             <span>Unlock {selectedRole} Terminal</span>
             <ArrowRight className="w-4 h-4" />
           </button>
+
+          <InstallAppButton className="w-full justify-center py-2.5 text-xs bg-slate-800/80 hover:bg-slate-800 text-amber-300 border-slate-700/80 rounded-xl" />
         </form>
 
         {/* Security Footer Note */}

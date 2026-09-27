@@ -88,10 +88,11 @@ export default function Navbar({
         </div>
 
         {/* Mobile Quick Action & Lock */}
-        <div className="flex items-center space-x-2 sm:hidden">
+        <div className="flex items-center space-x-1.5 sm:hidden">
+          <InstallAppButton className="text-[10px] py-1 px-2 font-extrabold" />
           <Link
             href="/sales"
-            className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-2.5 py-1 rounded text-xs transition shadow-sm flex items-center space-x-1"
+            className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-2 py-1 rounded text-xs transition shadow-sm flex items-center space-x-1"
           >
             <PlusCircle className="w-3.5 h-3.5" />
             <span>Sale</span>
