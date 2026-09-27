@@ -24,6 +24,19 @@ export default function ReceiptModal({
 
   if (!receipt) return null;
 
+  const items: any[] = Array.isArray(receipt.items_snapshot)
+    ? receipt.items_snapshot
+    : typeof receipt.items_snapshot === 'string'
+    ? (() => {
+        try {
+          const parsed = JSON.parse(receipt.items_snapshot);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (_) {
+          return [];
+        }
+      })()
+    : [];
+
   const handlePrint = () => {
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
@@ -77,7 +90,7 @@ export default function ReceiptModal({
                 </tr>
               </thead>
               <tbody>
-                ${(receipt.items_snapshot || []).map((item: any) => `
+                ${items.map((item: any) => `
                   <tr>
                     <td>${item.name || item.product_name}</td>
                     <td class="right">${formatQuantity(item.quantity)}</td>
@@ -167,7 +180,7 @@ export default function ReceiptModal({
                 </tr>
               </thead>
               <tbody>
-                ${(receipt.items_snapshot || []).map((item: any, idx: number) => `
+                ${items.map((item: any, idx: number) => `
                   <tr>
                     <td>${idx + 1}</td>
                     <td><strong>${item.name || item.product_name}</strong></td>
@@ -266,7 +279,7 @@ export default function ReceiptModal({
           <div className="border-b border-dashed border-slate-300 my-2" />
 
           <div className="space-y-1">
-            {(receipt.items_snapshot || []).map((item: any, idx: number) => (
+            {items.map((item: any, idx: number) => (
               <div key={idx} className="flex justify-between items-start text-slate-800">
                 <span className="truncate max-w-[180px]">
                   {formatQuantity(item.quantity)}x {item.name || item.product_name}

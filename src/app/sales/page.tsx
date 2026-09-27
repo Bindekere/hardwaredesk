@@ -200,32 +200,39 @@ function QuickSalesTerminal() {
     }
 
     startTransition(async () => {
-      const idempotencyKey = `sale-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-      const result = await executeSale({
-        customerId: selectedCustomerId || null,
-        customerName: selectedCustomer ? selectedCustomer.name : 'Walk-in Customer',
-        paymentMethod,
-        amountPaid: paymentMethod === 'Credit' ? 0 : totalAmount,
-        discountAmount: parsedDiscount,
-        items: cart.map(item => ({
-          productId: item.id,
-          quantity: item.quantity,
-          unitPrice: item.selling_price,
-        })),
-        idempotencyKey,
-        cashierName: userRole,
-      });
+      try {
+        const idempotencyKey = `sale-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+        const result = await executeSale({
+          customerId: selectedCustomerId || null,
+          customerName: selectedCustomer ? selectedCustomer.name : 'Walk-in Customer',
+          paymentMethod,
+          amountPaid: paymentMethod === 'Credit' ? 0 : totalAmount,
+          discountAmount: parsedDiscount,
+          items: cart.map(item => ({
+            productId: item.id,
+            quantity: item.quantity,
+            unitPrice: item.selling_price,
+          })),
+          idempotencyKey,
+          cashierName: userRole,
+        });
 
-      if (!result.success || !result.receipt) {
-        setErrorMessage(result.error || 'Checkout failed. Please review stock quantities.');
-        return;
+        if (!result.success || !result.receipt) {
+          setErrorMessage(result.error || 'Checkout failed. Please review stock quantities.');
+          return;
+        }
+
+        setCompletedReceipt(result.receipt);
+        setCart([]);
+        setDiscountAmount('0');
+        setMobileCartOpen(false);
+        try {
+          await loadData();
+        } catch (_) {}
+      } catch (err: any) {
+        console.error('Sale transaction error:', err);
+        setErrorMessage(err?.message || 'Transaction could not be completed. Please check your connection and try again.');
       }
-
-      setCompletedReceipt(result.receipt);
-      setCart([]);
-      setDiscountAmount('0');
-      setMobileCartOpen(false);
-      loadData();
     });
   };
 
@@ -754,17 +761,67 @@ function QuickSalesTerminal() {
                 </div>
               ))}
             </div>
-            <div className="border-t pt-3 space-y-2 mt-3">
-              <div className="flex justify-between font-black text-base text-slate-900">
-                <span>Total Due:</span>
-                <span className="text-amber-600">{formatCurrency(totalAmount, currency)}</span>
+            <div className="border-t pt-3 space-y-2.5 mt-2">
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 mb-0.5">Customer</label>
+                  <select
+                    value={selectedCustomerId}
+                    onChange={(e) => setSelectedCustomerId(e.target.value)}
+                    className="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-amber-500 bg-white"
+                  >
+                    <option value="">Walk-in Customer</option>
+                    {customers.map(c => (
+                      <option key={c.id} value={c.id}>
+                        {c.name} {c.store_credit > 0 ? `(${formatCurrency(c.store_credit, currency)})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 mb-0.5">Payment</label>
+                  <select
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
+                    className="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-amber-500 bg-white font-semibold"
+                  >
+                    <option value="Cash">Cash</option>
+                    <option value="Mobile Money">MTN / Airtel MoMo</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    {availableStoreCredit > 0 && (
+                      <option value="Store Credit">Store Credit ({formatCurrency(availableStoreCredit, currency)})</option>
+                    )}
+                    <option value="Credit">Credit (Account)</option>
+                  </select>
+                </div>
               </div>
+
+              {errorMessage && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold">
+                  {errorMessage}
+                </div>
+              )}
+
+              <div className="flex justify-between items-center font-black text-base text-slate-900 pt-1">
+                <span className="text-xs text-slate-500 font-bold uppercase">Total Due:</span>
+                <span className="text-amber-600 text-lg font-black">{formatCurrency(totalAmount, currency)}</span>
+              </div>
+
               <button
+                type="button"
                 onClick={handleCheckout}
-                disabled={isPending}
-                className="w-full py-3 bg-amber-500 text-slate-950 font-black rounded-xl text-xs sm:text-sm"
+                disabled={isPending || cart.length === 0}
+                className="w-full py-3 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-black rounded-xl text-sm transition shadow-sm flex items-center justify-center space-x-1.5"
               >
-                {isPending ? 'Committing...' : `Complete Sale (${formatCurrency(totalAmount, currency)})`}
+                {isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                    <span>Committing Sale...</span>
+                  </>
+                ) : (
+                  <span>Complete Sale ({formatCurrency(totalAmount, currency)})</span>
+                )}
               </button>
             </div>
           </div>

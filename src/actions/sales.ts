@@ -29,12 +29,22 @@ export async function executeSale(payload: any): Promise<{ success: boolean; err
   });
 
   if (!rpcError && rpcResult && rpcResult.success) {
-    revalidatePath('/sales');
-    revalidatePath('/inventory');
-    revalidatePath('/receipt-book');
-    revalidatePath('/ledger');
-    revalidatePath('/reports');
-    revalidatePath('/');
+    try {
+      revalidatePath('/inventory');
+      revalidatePath('/receipt-book');
+      revalidatePath('/ledger');
+      revalidatePath('/reports');
+      revalidatePath('/');
+    } catch (_) {}
+
+    let itemsSnapshot = rpcResult.items;
+    if (typeof itemsSnapshot === 'string') {
+      try {
+        itemsSnapshot = JSON.parse(itemsSnapshot);
+      } catch (_) {
+        itemsSnapshot = [];
+      }
+    }
 
     return {
       success: true,
@@ -45,8 +55,8 @@ export async function executeSale(payload: any): Promise<{ success: boolean; err
         receipt_type: 'SALE',
         party_name: parsed.data.customerName,
         payment_method: rpcResult.payment_method,
-        total_amount: rpcResult.total_amount,
-        items_snapshot: rpcResult.items,
+        total_amount: Number(rpcResult.total_amount) || 0,
+        items_snapshot: Array.isArray(itemsSnapshot) ? itemsSnapshot : [],
         created_at: rpcResult.created_at || new Date().toISOString(),
       },
     };
@@ -210,12 +220,13 @@ export async function executeSale(payload: any): Promise<{ success: boolean; err
       }
     }
 
-    revalidatePath('/sales');
-    revalidatePath('/inventory');
-    revalidatePath('/receipt-book');
-    revalidatePath('/ledger');
-    revalidatePath('/reports');
-    revalidatePath('/');
+    try {
+      revalidatePath('/inventory');
+      revalidatePath('/receipt-book');
+      revalidatePath('/ledger');
+      revalidatePath('/reports');
+      revalidatePath('/');
+    } catch (_) {}
 
     return {
       success: true,

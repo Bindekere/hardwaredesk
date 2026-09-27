@@ -16,28 +16,37 @@ export default function PwaInstallPrompt() {
   const [dismissedBanner, setDismissedBanner] = useState(false);
 
   useEffect(() => {
-    // 1. Register Service Worker
+    // 1. Register Service Worker safely
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((reg) => console.log('HardwareDesk ServiceWorker registered:', reg.scope))
-        .catch((err) => console.error('ServiceWorker registration failed:', err));
+      try {
+        navigator.serviceWorker
+          .register('/sw.js')
+          .then((reg) => {
+            console.log('HardwareDesk ServiceWorker registered:', reg.scope);
+            reg.update().catch(() => {});
+          })
+          .catch((err) => console.warn('ServiceWorker registration skipped:', err));
+      } catch (_) {}
     }
 
     // 2. Check if already running in standalone mode (installed app)
-    const isStandalone =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      (navigator as any).standalone === true;
+    try {
+      const isStandalone =
+        (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+        (typeof navigator !== 'undefined' && (navigator as any).standalone === true);
 
-    if (isStandalone) {
-      setIsInstalled(true);
-      return;
-    }
+      if (isStandalone) {
+        setIsInstalled(true);
+        return;
+      }
+    } catch (_) {}
 
     // 3. Detect iOS Safari
-    const userAgent = window.navigator.userAgent.toLowerCase();
-    const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
-    setIsIos(isIosDevice);
+    try {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
+      setIsIos(isIosDevice);
+    } catch (_) {}
 
     // 4. Capture beforeinstallprompt for Android/Chrome
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -55,9 +64,11 @@ export default function PwaInstallPrompt() {
     });
 
     // Check if dismissed previously in session
-    if (sessionStorage.getItem('hd_pwa_dismissed') === 'true') {
-      setDismissedBanner(true);
-    }
+    try {
+      if (sessionStorage.getItem('hd_pwa_dismissed') === 'true') {
+        setDismissedBanner(true);
+      }
+    } catch (_) {}
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -246,24 +257,28 @@ export function InstallAppButton({ className = '' }: { className?: string }) {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    const isStandalone =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      (navigator as any).standalone === true;
+    try {
+      const isStandalone =
+        (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+        (typeof navigator !== 'undefined' && (navigator as any).standalone === true);
 
-    if (isStandalone) {
+      if (isStandalone) {
+        setCanInstall(false);
+        return;
+      }
+
+      setCanInstall(true);
+
+      const handlePrompt = (e: Event) => {
+        e.preventDefault();
+        setDeferredPrompt(e as BeforeInstallPromptEvent);
+      };
+
+      window.addEventListener('beforeinstallprompt', handlePrompt);
+      return () => window.removeEventListener('beforeinstallprompt', handlePrompt);
+    } catch (_) {
       setCanInstall(false);
-      return;
     }
-
-    setCanInstall(true);
-
-    const handlePrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-    };
-
-    window.addEventListener('beforeinstallprompt', handlePrompt);
-    return () => window.removeEventListener('beforeinstallprompt', handlePrompt);
   }, []);
 
   if (!canInstall) return null;
