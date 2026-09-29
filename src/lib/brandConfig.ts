@@ -14,6 +14,8 @@ export const BRAND_CONFIG = {
     : 'S.H Paint World',
   shortName: 'S.H Paint World',
   badge: 'SH',
+  logoUrl: '/logo.svg',
+  logoPng: '/logo.png',
   businessType: 'Paints & Hardware',
   tagline: 'Paint & Hardware POS & Stock Management',
   industry: 'Paints, Finishes & Hardware Supplies',

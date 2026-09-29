@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { UserRole } from '@/lib/types';
 import { ShoppingCart, Search, Menu, X, PlusCircle, Lock } from 'lucide-react';
 import { InstallAppButton } from '@/components/PwaInstallPrompt';
+import BrandLogo from '@/components/BrandLogo';
 import BRAND_CONFIG from '@/lib/brandConfig';
 
 interface NavbarProps {
@@ -84,17 +85,12 @@ export default function Navbar({
           </button>
 
           <Link href="/" className="flex items-center space-x-2 group">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-blue-600 flex items-center justify-center font-black text-white text-xs sm:text-sm shadow-xs group-hover:bg-blue-500 transition shrink-0">
-              {BRAND_CONFIG.badge}
-            </div>
-            <div className="flex flex-col min-w-0">
-              <span className="text-sm sm:text-base font-extrabold tracking-tight text-white leading-tight truncate max-w-[125px] xs:max-w-[180px] sm:max-w-none">
-                {BRAND_CONFIG.shopName}
-              </span>
-              <span className="hidden md:inline text-[10px] text-blue-300 font-medium leading-none truncate max-w-[220px]">
-                {BRAND_CONFIG.tagline}
-              </span>
-            </div>
+            <BrandLogo
+              size="sm"
+              showText
+              textClassName="truncate max-w-[125px] xs:max-w-[180px] sm:max-w-none text-sm sm:text-base group-hover:text-blue-200 transition"
+              subtitleClassName="hidden md:inline max-w-[220px]"
+            />
           </Link>
         </div>
 

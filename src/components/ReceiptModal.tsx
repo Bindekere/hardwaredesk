@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Receipt } from '@/lib/types';
 import { formatCurrency, formatDateTime, formatQuantity } from '@/lib/formatters';
 import { Printer, Download, X, CheckCircle, Store, FileText } from 'lucide-react';
+import BrandLogo from '@/components/BrandLogo';
 import BRAND_CONFIG from '@/lib/brandConfig';
 
 interface ReceiptModalProps {
@@ -72,6 +73,9 @@ export default function ReceiptModal({
             </style>
           </head>
           <body>
+            <div class="center" style="margin-bottom: 4px;">
+              <span style="display: inline-block; padding: 2px 7px; border: 1.5px solid #000; font-weight: 900; font-size: 13px; border-radius: 4px; letter-spacing: 1px;">SH</span>
+            </div>
             <div class="center bold" style="font-size: 14px;">${shopName}</div>
             <div class="center" style="font-size: 9px; margin-top: 2px;">${shopContact}</div>
             <div class="double-divider"></div>
@@ -147,10 +151,15 @@ export default function ReceiptModal({
           </head>
           <body>
             <div class="header">
-              <div class="brand">
-                <h1>${shopName}</h1>
-                <p style="margin: 4px 0; color: #1e3a8a; font-weight: 600;">Quality Paints, Finishes & Hardware Supplies</p>
-                <p style="margin: 2px 0; font-size: 11px;">${shopContact}</p>
+              <div class="brand" style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #2563eb, #1e3a8a); color: #ffffff; font-weight: 900; font-size: 22px; display: flex; align-items: center; justify-content: center; letter-spacing: -1px; box-shadow: 0 4px 10px rgba(30,58,138,0.25);">
+                  SH
+                </div>
+                <div>
+                  <h1 style="margin: 0; font-size: 22px; color: #0f172a;">${shopName}</h1>
+                  <p style="margin: 3px 0; color: #1e3a8a; font-weight: 600; font-size: 12px;">Quality Paints, Finishes & Hardware Supplies</p>
+                  <p style="margin: 1px 0; font-size: 11px; color: #475569;">${shopContact}</p>
+                </div>
               </div>
               <div class="invoice-title">
                 <h2>OFFICIAL INVOICE / RECEIPT</h2>
@@ -254,6 +263,9 @@ export default function ReceiptModal({
         </div>
 
         <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 font-mono text-xs space-y-2 max-h-72 overflow-y-auto">
+          <div className="flex justify-center mb-1">
+            <BrandLogo size="xs" />
+          </div>
           <div className="text-center font-bold text-slate-800 text-sm">
             {shopName}
           </div>

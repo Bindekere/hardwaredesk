@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { UserRole } from '@/lib/types';
 import { Shield, KeyRound, Lock, ArrowRight, AlertCircle, Store, CheckCircle2 } from 'lucide-react';
 import { InstallAppButton } from '@/components/PwaInstallPrompt';
+import BrandLogo from '@/components/BrandLogo';
 import { BRAND_CONFIG } from '@/lib/brandConfig';
 
 interface LoginScreenProps {
@@ -66,12 +67,10 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
       <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-8 relative z-10 space-y-6">
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 bg-blue-600 text-white font-black text-2xl rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-blue-600/30">
-            {BRAND_CONFIG.badge}
-          </div>
+          <BrandLogo size="xl" className="mx-auto justify-center" />
           <div>
             <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center justify-center gap-1.5">
-              {BRAND_CONFIG.shopName} <span className="text-xs bg-blue-900/80 text-blue-300 font-mono px-2 py-0.5 rounded border border-blue-700/60">{BRAND_CONFIG.badge}</span>
+              {BRAND_CONFIG.shopName}
             </h1>
             <p className="text-xs text-slate-400 mt-0.5">
               {BRAND_CONFIG.businessType} · POS & Stock Terminal

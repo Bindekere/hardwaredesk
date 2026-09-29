@@ -19,6 +19,7 @@ import {
   Smartphone,
 } from 'lucide-react';
 import { InstallAppButton } from '@/components/PwaInstallPrompt';
+import BrandLogo from '@/components/BrandLogo';
 import { BRAND_CONFIG } from '@/lib/brandConfig';
 
 interface SidebarProps {
@@ -90,15 +91,12 @@ export default function Sidebar({
         <div className="space-y-4">
           {/* Mobile Drawer Header */}
           <div className="flex items-center justify-between lg:hidden border-b border-slate-800 pb-3 -mx-1 px-1">
-            <div className="flex items-center space-x-2">
-              <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center font-black text-white text-xs shadow-xs">
-                {BRAND_CONFIG.badge}
-              </div>
-              <div>
-                <h2 className="font-extrabold text-sm text-white leading-tight">{BRAND_CONFIG.shopName}</h2>
-                <p className="text-[10px] text-blue-300 font-medium">{BRAND_CONFIG.businessType} POS</p>
-              </div>
-            </div>
+            <BrandLogo
+              size="sm"
+              showText
+              textClassName="text-sm font-extrabold"
+              subtitleClassName="text-[10px]"
+            />
             <button
               onClick={() => setMobileMenuOpen(false)}
               className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
