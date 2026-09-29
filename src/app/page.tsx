@@ -50,50 +50,54 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4 sm:space-y-6 max-w-7xl mx-auto">
-      <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2.5">
+      {/* Dashboard Header Bar */}
+      <div className="flex items-center justify-between gap-2">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Dashboard Overview</h1>
-          <p className="text-xs sm:text-sm text-slate-500">Live operational metrics & store sales performance</p>
+          <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">Dashboard Overview</h1>
+          <p className="text-xs text-slate-500 hidden sm:block">Live operational metrics & store sales performance</p>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
           <button
             onClick={() => loadData(true)}
             disabled={refreshing}
-            className="bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition shadow-xs"
+            className="bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition shadow-xs"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-blue-600' : ''}`} />
-            <span>{refreshing ? 'Updating...' : 'Sync Live'}</span>
+            <span className="hidden xs:inline">{refreshing ? 'Updating...' : 'Sync Live'}</span>
           </button>
-          <span className="text-xs bg-slate-200 text-slate-800 font-bold px-2.5 py-1 rounded-lg">
-            Role: {userRole}
+          <span className="text-[11px] sm:text-xs bg-slate-200/80 text-slate-800 font-bold px-2 sm:px-2.5 py-1.5 rounded-lg border border-slate-300/60">
+            {userRole}
           </span>
         </div>
       </div>
 
+      {/* Metrics Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-        <div className="bg-white p-4 sm:p-5 rounded-xl shadow-xs border border-slate-200 hover:border-slate-300 transition">
+        {/* Today's Revenue */}
+        <div className="bg-gradient-to-br from-emerald-500/10 via-white to-white p-4 sm:p-5 rounded-2xl shadow-xs border border-emerald-200/80 hover:border-emerald-300 transition">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Today's Revenue</span>
-            <div className="p-2 rounded-lg bg-green-50 text-green-600">
+            <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Today's Revenue</span>
+            <div className="p-2 rounded-xl bg-emerald-100/80 text-emerald-700">
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-green-600 mt-2">
+          <p className="text-2xl sm:text-3xl font-black text-emerald-700 mt-2">
             {loading ? '...' : formatCurrency(metrics.todaysRevenue, currency)}
           </p>
-          <span className="text-xs text-green-700 font-semibold mt-1 block">
+          <span className="text-xs text-emerald-700 font-semibold mt-1 block">
             {loading ? 'Calculating...' : `${metrics.todaysSalesCount} completed sales today`}
           </span>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl shadow-xs border border-slate-200 hover:border-slate-300 transition">
+        {/* Total Products */}
+        <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-xs border border-slate-200/80 hover:border-slate-300 transition">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Products</span>
-            <div className="p-2 rounded-lg bg-slate-100 text-slate-700">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Products</span>
+            <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
               <Package className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 mt-2">
+          <p className="text-2xl sm:text-3xl font-black text-slate-900 mt-2">
             {loading ? '...' : metrics.totalProductsCount}
           </p>
           <span className="text-xs text-slate-500 font-medium mt-1 block">
@@ -101,22 +105,23 @@ export default function DashboardPage() {
           </span>
         </div>
 
+        {/* Low Stock Alerts */}
         <Link
           href="/inventory"
-          className="bg-white p-4 sm:p-5 rounded-xl shadow-xs border border-slate-200 hover:border-blue-400 hover:shadow-sm transition group"
+          className="bg-white p-4 sm:p-5 rounded-2xl shadow-xs border border-amber-200/80 hover:border-amber-400 hover:shadow-sm transition group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Low Stock Alerts</span>
-            <div className="p-2 rounded-lg bg-amber-50 text-amber-600 group-hover:scale-105 transition">
+            <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wider">Low Stock Alerts</span>
+            <div className="p-2 rounded-xl bg-amber-100/80 text-amber-700 group-hover:scale-105 transition">
               <AlertTriangle className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-amber-600 mt-2">
+          <p className="text-2xl sm:text-3xl font-black text-amber-600 mt-2">
             {loading ? '...' : metrics.lowStockCount}
           </p>
           <span className="text-xs text-amber-700 font-semibold mt-1 flex items-center justify-between">
             <span>Items below minimum threshold</span>
-            <span className="group-hover:translate-x-0.5 transition flex items-center space-x-0.5">
+            <span className="group-hover:translate-x-0.5 transition flex items-center space-x-0.5 font-bold">
               <span>View</span>
               <ArrowRight className="w-3 h-3" />
             </span>
@@ -125,7 +130,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <div className="bg-white rounded-xl shadow-xs border border-slate-200 p-4 sm:p-5 flex flex-col justify-between">
+        <div className="bg-white rounded-2xl shadow-xs border border-slate-200/80 p-4 sm:p-5 flex flex-col justify-between">
           <div>
             <div className="flex justify-between items-center mb-3">
               <h2 className="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider">
@@ -206,7 +211,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-xs border border-slate-200 p-4 sm:p-5 flex flex-col justify-between">
+        <div className="bg-white rounded-2xl shadow-xs border border-slate-200/80 p-4 sm:p-5 flex flex-col justify-between">
           <div>
             <div className="flex justify-between items-center mb-3">
               <h2 className="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">

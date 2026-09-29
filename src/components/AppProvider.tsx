@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserRole } from '@/lib/types';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
+import BottomNav from '@/components/BottomNav';
 import LoginScreen from '@/components/LoginScreen';
 import { BRAND_CONFIG } from '@/lib/brandConfig';
 
@@ -126,12 +127,18 @@ export default function AppProvider({ children }: { children: React.ReactNode })
             userRole={userRole}
             mobileMenuOpen={mobileMenuOpen}
             setMobileMenuOpen={setMobileMenuOpen}
+            currency={currency}
+            setCurrency={handleSetCurrency}
             onLogout={handleLogout}
           />
-          <main className="flex-1 p-3 sm:p-5 md:p-6 max-w-full overflow-x-hidden">
+          <main className="flex-1 p-3 sm:p-5 md:p-6 max-w-full overflow-x-hidden pb-20 lg:pb-6">
             {children}
           </main>
         </div>
+        <BottomNav
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+        />
       </div>
     </AppContext.Provider>
   );
