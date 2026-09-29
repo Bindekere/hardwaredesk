@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next';
+import BRAND_CONFIG from '@/lib/brandConfig';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'HardwareDesk — Uganda Hardware POS',
-    short_name: 'HardwareDesk',
-    description: 'Database-backed Hardware POS, Inventory, and Ledger Management for Hardware Shops in Uganda.',
+    name: `${BRAND_CONFIG.shopName} — Uganda POS & Inventory`,
+    short_name: BRAND_CONFIG.shortName,
+    description: `Database-backed POS, Inventory, and Ledger Management for ${BRAND_CONFIG.shopName} in Uganda.`,
     start_url: '/',
     id: '/',
     scope: '/',

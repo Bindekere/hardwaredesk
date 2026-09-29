@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Download, Smartphone, X, Check, Share, PlusSquare, ArrowDown, ExternalLink } from 'lucide-react';
+import { BRAND_CONFIG } from '@/lib/brandConfig';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -121,18 +122,18 @@ export default function PwaInstallPrompt() {
       {/* 1. iOS Safari Dedicated Bottom Callout */}
       {isIos && !dismissedBanner && (
         <div className="fixed bottom-2 inset-x-2 sm:inset-x-auto sm:right-4 sm:max-w-sm z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
-          <div className="bg-slate-900/95 backdrop-blur-md text-white p-3 rounded-2xl shadow-2xl border border-amber-500/40 space-y-2">
+          <div className="bg-slate-900/95 backdrop-blur-md text-white p-3 rounded-2xl shadow-2xl border border-blue-500/40 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2.5">
                 <img
                   src="/icons/icon-192x192.png"
-                  alt="HardwareDesk"
-                  className="w-9 h-9 rounded-xl shadow-md border border-amber-500/30 shrink-0"
+                  alt={BRAND_CONFIG.shopName}
+                  className="w-9 h-9 rounded-xl shadow-md border border-blue-500/30 shrink-0"
                 />
                 <div>
                   <div className="text-xs font-black text-white flex items-center space-x-1">
-                    <span>HardwareDesk for iPhone</span>
-                    <span className="text-[9px] bg-amber-500 text-slate-950 font-black px-1.5 py-0.2 rounded-full">
+                    <span>{BRAND_CONFIG.shopName} for iPhone</span>
+                    <span className="text-[9px] bg-blue-600 text-white font-black px-1.5 py-0.2 rounded-full">
                       App
                     </span>
                   </div>
@@ -161,7 +162,7 @@ export default function PwaInstallPrompt() {
               </div>
               <button
                 onClick={() => setShowModal(true)}
-                className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs px-3 py-1.5 rounded-lg shrink-0 shadow-xs transition"
+                className="bg-blue-600 hover:bg-blue-500 text-white font-black text-xs px-3 py-1.5 rounded-lg shrink-0 shadow-xs transition"
               >
                 Steps
               </button>
@@ -169,7 +170,7 @@ export default function PwaInstallPrompt() {
 
             {/* Little indicator arrow pointing downward toward Safari toolbar */}
             <div className="flex justify-center -mb-3 pt-0.5">
-              <div className="w-3 h-3 bg-slate-900 border-b border-r border-amber-500/40 transform rotate-45" />
+              <div className="w-3 h-3 bg-slate-900 border-b border-r border-blue-500/40 transform rotate-45" />
             </div>
           </div>
         </div>
@@ -177,17 +178,17 @@ export default function PwaInstallPrompt() {
 
       {/* 2. Android / Other Mobile Banner */}
       {!isIos && !dismissedBanner && (
-        <div className="lg:hidden fixed top-16 inset-x-2 z-40 bg-slate-900 text-white p-2.5 rounded-xl shadow-xl border border-amber-500/30 flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="lg:hidden fixed top-16 inset-x-2 z-40 bg-slate-900 text-white p-2.5 rounded-xl shadow-xl border border-blue-500/30 flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="flex items-center space-x-2.5">
             <img
               src="/icons/icon-192x192.png"
-              alt="HardwareDesk"
+              alt={BRAND_CONFIG.shopName}
               className="w-8 h-8 rounded-lg shadow-xs shrink-0"
             />
             <div className="min-w-0">
               <div className="text-xs font-bold text-slate-100 flex items-center space-x-1">
-                <span>HardwareDesk App</span>
-                <span className="text-[9px] bg-amber-500 text-slate-950 font-black px-1.5 py-0.2 rounded-full">
+                <span>{BRAND_CONFIG.shopName} App</span>
+                <span className="text-[9px] bg-blue-600 text-white font-black px-1.5 py-0.2 rounded-full">
                   Fast
                 </span>
               </div>
@@ -200,7 +201,7 @@ export default function PwaInstallPrompt() {
           <div className="flex items-center space-x-1.5 shrink-0">
             <button
               onClick={handleInstallClick}
-              className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs px-3 py-1.5 rounded-lg shadow-xs transition flex items-center space-x-1"
+              className="bg-blue-600 hover:bg-blue-500 text-white font-black text-xs px-3 py-1.5 rounded-lg shadow-xs transition flex items-center space-x-1"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Install</span>
@@ -224,12 +225,12 @@ export default function PwaInstallPrompt() {
               <div className="flex items-center space-x-3">
                 <img
                   src="/icons/icon-192x192.png"
-                  alt="HardwareDesk"
+                  alt={BRAND_CONFIG.shopName}
                   className="w-12 h-12 rounded-2xl shadow-md border border-slate-200 shrink-0"
                 />
                 <div>
-                  <h3 className="font-black text-base text-slate-900 leading-tight">Install HardwareDesk</h3>
-                  <p className="text-xs text-slate-500 font-medium">Dedicated POS & Inventory App</p>
+                  <h3 className="font-black text-base text-slate-900 leading-tight">Install {BRAND_CONFIG.shopName}</h3>
+                  <p className="text-xs text-slate-500 font-medium">{BRAND_CONFIG.businessType} App</p>
                 </div>
               </div>
               <button
@@ -242,7 +243,7 @@ export default function PwaInstallPrompt() {
 
             {isIos ? (
               <div className="space-y-3.5 text-xs text-slate-700">
-                <div className="bg-amber-50 border border-amber-200 p-2.5 rounded-xl text-amber-950 font-medium text-[11px] leading-relaxed">
+                <div className="bg-blue-50 border border-blue-200 p-2.5 rounded-xl text-blue-950 font-medium text-[11px] leading-relaxed">
                   Apple Safari requires 3 quick taps to install web applications to your iPhone home screen:
                 </div>
 
@@ -264,7 +265,7 @@ export default function PwaInstallPrompt() {
                   </li>
 
                   <li className="flex items-start space-x-3">
-                    <span className="w-6 h-6 rounded-full bg-amber-100 text-amber-900 font-bold flex items-center justify-center shrink-0 text-xs">
+                    <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 font-bold flex items-center justify-center shrink-0 text-xs">
                       2
                     </span>
                     <div>
@@ -285,7 +286,7 @@ export default function PwaInstallPrompt() {
                     <div>
                       <span className="font-bold text-slate-900 block">Tap &quot;Add&quot;</span>
                       <span className="text-slate-600 leading-relaxed">
-                        In the top-right corner of your screen, tap <strong>Add</strong>. HardwareDesk will now appear as an app icon on your home screen!
+                        In the top-right corner of your screen, tap <strong>Add</strong>. {BRAND_CONFIG.shopName} will now appear as an app icon on your home screen!
                       </span>
                     </div>
                   </li>
@@ -306,7 +307,7 @@ export default function PwaInstallPrompt() {
             ) : (
               <div className="space-y-3 text-xs text-slate-700">
                 <p className="text-slate-600 leading-relaxed">
-                  Install HardwareDesk as a permanent app on your device:
+                  Install {BRAND_CONFIG.shopName} as a permanent app on your device:
                 </p>
                 <div className="space-y-1.5">
                   <div className="flex items-center space-x-2 text-slate-800">
@@ -326,7 +327,7 @@ export default function PwaInstallPrompt() {
                 {deferredPrompt ? (
                   <button
                     onClick={handleInstallClick}
-                    className="w-full mt-2 py-3 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-black rounded-xl text-xs sm:text-sm shadow-xs flex items-center justify-center space-x-1.5"
+                    className="w-full mt-2 py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-black rounded-xl text-xs sm:text-sm shadow-md shadow-blue-900/20 flex items-center justify-center space-x-1.5"
                   >
                     <Download className="w-4 h-4" />
                     <span>Install App on Device</span>
@@ -399,10 +400,10 @@ export function InstallAppButton({ className = '' }: { className?: string }) {
   return (
     <button
       onClick={handleClick}
-      className={`bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 ${className}`}
-      title="Install HardwareDesk on your phone or computer"
+      className={`bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 ${className}`}
+      title={`Install ${BRAND_CONFIG.shopName} on your phone or computer`}
     >
-      <Smartphone className="w-3.5 h-3.5 text-amber-400" />
+      <Smartphone className="w-3.5 h-3.5 text-blue-400" />
       <span>Install App</span>
     </button>
   );

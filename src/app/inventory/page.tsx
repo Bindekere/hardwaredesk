@@ -479,7 +479,7 @@ export default function InventoryPage() {
               </button>
               <button
                 onClick={() => setShowAddModal(true)}
-                className="bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition shadow-xs flex items-center space-x-1"
+                className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition shadow-md shadow-blue-900/20 flex items-center space-x-1"
               >
                 <Plus className="w-4 h-4" />
                 <span>+ Add Product</span>
@@ -589,7 +589,7 @@ export default function InventoryPage() {
             placeholder="Filter by Product Name, SKU, Barcode, Bin Location..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full border border-slate-300 rounded-lg px-3 py-2 pl-9 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50 focus:bg-white transition"
+            className="w-full border border-slate-300 rounded-lg px-3 py-2 pl-9 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 bg-slate-50 focus:bg-white transition"
           />
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
         </div>
@@ -601,7 +601,7 @@ export default function InventoryPage() {
               onClick={() => setSelectedCategory(cat)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap ${
                 selectedCategory === cat
-                  ? 'bg-amber-500 text-slate-950 shadow-xs'
+                  ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
               }`}
             >
@@ -659,7 +659,7 @@ export default function InventoryPage() {
                     <td className="py-3 px-3 sm:px-4 text-right text-slate-600 whitespace-nowrap">
                       {formatCurrency(p.cost_price, currency)}
                     </td>
-                    <td className="py-3 px-3 sm:px-4 text-right font-black text-amber-600 whitespace-nowrap">
+                    <td className="py-3 px-3 sm:px-4 text-right font-black text-blue-700 whitespace-nowrap">
                       {formatCurrency(p.selling_price, currency)}
                     </td>
                     <td className="py-3 px-3 sm:px-4 font-mono text-xs text-slate-600 whitespace-nowrap">
@@ -673,7 +673,7 @@ export default function InventoryPage() {
                         <>
                           <button
                             onClick={() => handleOpenEdit(p)}
-                            className="bg-amber-50 hover:bg-amber-100 text-amber-900 px-2.5 py-1 rounded-lg text-xs font-semibold transition border border-amber-300 inline-flex items-center space-x-1"
+                            className="bg-blue-50 hover:bg-blue-100 text-blue-900 px-2.5 py-1 rounded-lg text-xs font-semibold transition border border-blue-200 inline-flex items-center space-x-1"
                             title="Edit product details, SKU, and prices"
                           >
                             <Edit3 className="w-3 h-3" />
@@ -709,7 +709,7 @@ export default function InventoryPage() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-4 sm:p-6 space-y-4 my-8 shadow-2xl border border-gray-100">
             <div className="flex justify-between items-center border-b pb-3">
               <div className="flex items-center space-x-2">
-                <Package className="w-5 h-5 text-amber-500" />
+                <Package className="w-5 h-5 text-blue-600" />
                 <h3 className="text-base sm:text-lg font-bold text-slate-900">Add New Hardware Product</h3>
               </div>
               <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
@@ -811,7 +811,7 @@ export default function InventoryPage() {
                     placeholder="36500"
                     value={newProd.sellingPrice}
                     onChange={e => setNewProd({ ...newProd, sellingPrice: e.target.value })}
-                    className="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm font-mono font-bold text-amber-600"
+                    className="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm font-mono font-bold text-blue-700"
                   />
                 </div>
               </div>
@@ -862,7 +862,7 @@ export default function InventoryPage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 rounded-xl shadow-xs flex items-center space-x-1"
+                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl shadow-md shadow-blue-900/20 flex items-center space-x-1"
                 >
                   {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                   <span>Save Product</span>
@@ -967,7 +967,7 @@ export default function InventoryPage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 rounded-xl shadow-xs flex items-center space-x-1"
+                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl shadow-md shadow-blue-900/20 flex items-center space-x-1"
                 >
                   {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                   <span>Apply Movement</span>
@@ -1001,7 +1001,7 @@ export default function InventoryPage() {
                       <div className="font-bold text-slate-800 flex items-center space-x-2">
                         <span className={`px-1.5 py-0.5 rounded text-[10px] font-black ${
                           m.movement_type === 'SALE' ? 'bg-red-100 text-red-800' :
-                          m.movement_type === 'PURCHASE' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-900'
+                          m.movement_type === 'PURCHASE' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-900'
                         }`}>
                           {m.movement_type}
                         </span>
@@ -1036,7 +1036,7 @@ export default function InventoryPage() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-4 sm:p-6 space-y-4 my-8 shadow-2xl border border-gray-100">
             <div className="flex justify-between items-center border-b pb-3">
               <div className="flex items-center space-x-2">
-                <Edit3 className="w-5 h-5 text-amber-500" />
+                <Edit3 className="w-5 h-5 text-blue-600" />
                 <div>
                   <h3 className="text-base sm:text-lg font-bold text-slate-900">Edit Product Details</h3>
                   <p className="text-xs text-slate-500 font-mono">Editing SKU: {showEditModal.sku}</p>
@@ -1136,7 +1136,7 @@ export default function InventoryPage() {
                     step="any"
                     value={editForm.sellingPrice}
                     onChange={e => setEditForm({ ...editForm, sellingPrice: e.target.value })}
-                    className="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm font-mono font-bold text-amber-600"
+                    className="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm font-mono font-bold text-blue-700"
                   />
                 </div>
               </div>
@@ -1180,7 +1180,7 @@ export default function InventoryPage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 rounded-xl shadow-xs flex items-center space-x-1"
+                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl shadow-md shadow-blue-900/20 flex items-center space-x-1"
                 >
                   {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                   <span>Update Product</span>
@@ -1293,7 +1293,7 @@ export default function InventoryPage() {
                             <td className="py-1.5 px-2.5 text-slate-500">{row.categoryName}</td>
                             <td className="py-1.5 px-2.5 text-center font-bold text-slate-900">{row.initialStock} {row.unit}</td>
                             <td className="py-1.5 px-2.5 text-right font-mono">{formatCurrency(row.costPrice, currency)}</td>
-                            <td className="py-1.5 px-2.5 text-right font-mono font-bold text-amber-600">{formatCurrency(row.sellingPrice, currency)}</td>
+                            <td className="py-1.5 px-2.5 text-right font-mono font-bold text-blue-700">{formatCurrency(row.sellingPrice, currency)}</td>
                             <td className="py-1.5 px-2.5 text-slate-500">{row.location}</td>
                           </tr>
                         ))}

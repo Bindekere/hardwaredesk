@@ -2,15 +2,16 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import AppProvider from '@/components/AppProvider';
 import PwaInstallPrompt from '@/components/PwaInstallPrompt';
+import BRAND_CONFIG from '@/lib/brandConfig';
 
 export const metadata: Metadata = {
-  title: 'HardwareDesk — Uganda Hardware Shop & POS System',
-  description: 'Fast, database-backed Point-of-Sale, Inventory, and Ledger Management for Hardware shops in Uganda.',
+  title: `${BRAND_CONFIG.shopName} — POS & Stock Management`,
+  description: `${BRAND_CONFIG.shopName}: Fast, database-backed Point-of-Sale, Inventory, and Ledger Management in Uganda.`,
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'HardwareDesk',
+    title: BRAND_CONFIG.shopName,
   },
   icons: {
     icon: [
@@ -43,12 +44,12 @@ export default function RootLayout({
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="HardwareDesk" />
+        <meta name="apple-mobile-web-app-title" content={BRAND_CONFIG.shopName} />
         <meta name="mobile-web-app-capable" content="yes" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
       </head>
-      <body className="antialiased selection:bg-amber-500 selection:text-slate-950">
+      <body className="antialiased selection:bg-blue-600 selection:text-white bg-slate-50 text-slate-900">
         <PwaInstallPrompt />
         <AppProvider>
           {children}

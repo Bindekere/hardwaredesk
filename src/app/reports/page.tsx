@@ -5,6 +5,7 @@ import { useApp } from '@/components/AppProvider';
 import { getFinancialReport } from '@/actions/reports';
 import { FinancialReportSummary } from '@/lib/types';
 import { formatCurrency, formatQuantity } from '@/lib/formatters';
+import { BRAND_CONFIG } from '@/lib/brandConfig';
 import {
   BarChart3,
   Calendar,
@@ -126,7 +127,7 @@ export default function ReportsPage() {
     ] : [];
 
     const allRows = [
-      [`HardwareDesk Uganda — Financial Report (${report.period})`],
+      [`${BRAND_CONFIG.shopName} — Financial Report (${report.period})`],
       [`Generated: ${new Date().toLocaleString()}`],
       [],
       ...salesRows,
@@ -140,7 +141,7 @@ export default function ReportsPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `HardwareDesk_Report_${period}_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `${BRAND_CONFIG.badge}_Report_${period}_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -154,7 +155,7 @@ export default function ReportsPage() {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Financial Report - ${report.period}</title>
+          <title>${BRAND_CONFIG.shopName} Report - ${report.period}</title>
           <meta charset="utf-8" />
           <style>
             body { font-family: Arial, sans-serif; padding: 30px; color: #0f172a; max-width: 900px; margin: 0 auto; font-size: 13px; }
@@ -177,7 +178,7 @@ export default function ReportsPage() {
         <body>
           <div class="header">
             <div class="brand">
-              <h1>HardwareDesk Uganda</h1>
+              <h1>${BRAND_CONFIG.shopName}</h1>
               <div>Executive Financial Performance Statement</div>
               <div class="meta">Period: <strong>${report.period}</strong> | Generated: ${new Date().toLocaleString()}</div>
             </div>
@@ -280,7 +281,7 @@ export default function ReportsPage() {
             </tbody>
           </table>
 
-          <div class="footer">HardwareDesk — Database-Backed Real-Time Accounting Audit</div>
+          <div class="footer">${BRAND_CONFIG.shopName} — Powered by ${BRAND_CONFIG.engineName} Accounting Audit</div>
           <script>
             window.onload = function() { window.print(); };
           </script>
@@ -295,7 +296,7 @@ export default function ReportsPage() {
       <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-xs border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center space-x-2">
-            <BarChart3 className="w-6 h-6 text-amber-500" />
+            <BarChart3 className="w-6 h-6 text-blue-600" />
             <span>Financial Reports & Analytics</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500">
@@ -310,7 +311,7 @@ export default function ReportsPage() {
               onClick={() => setPeriod(p)}
               className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition ${
                 period === p
-                  ? 'bg-amber-500 text-slate-950 shadow-xs'
+                  ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
               }`}
             >
@@ -335,27 +336,27 @@ export default function ReportsPage() {
       </div>
 
       {period === 'CUSTOM' && (
-        <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl flex flex-wrap items-center gap-3 text-xs">
-          <span className="font-bold text-amber-900 flex items-center space-x-1">
+        <div className="bg-blue-50 border border-blue-200 p-3 rounded-xl flex flex-wrap items-center gap-3 text-xs">
+          <span className="font-bold text-blue-900 flex items-center space-x-1">
             <Calendar className="w-4 h-4" />
             <span>Custom Date Range:</span>
           </span>
           <div className="flex items-center space-x-1.5">
-            <span className="text-amber-800 font-semibold">From:</span>
+            <span className="text-blue-900 font-semibold">From:</span>
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="border border-amber-300 rounded-lg px-2.5 py-1 bg-white text-xs"
+              className="border border-blue-300 rounded-lg px-2.5 py-1 bg-white text-xs"
             />
           </div>
           <div className="flex items-center space-x-1.5">
-            <span className="text-amber-800 font-semibold">To:</span>
+            <span className="text-blue-900 font-semibold">To:</span>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="border border-amber-300 rounded-lg px-2.5 py-1 bg-white text-xs"
+              className="border border-blue-300 rounded-lg px-2.5 py-1 bg-white text-xs"
             />
           </div>
         </div>
@@ -407,7 +408,7 @@ export default function ReportsPage() {
       {report?.inventoryValuation && (
         <div className="space-y-3 pt-1">
           <div className="flex items-center space-x-2">
-            <Store className="w-5 h-5 text-amber-600" />
+            <Store className="w-5 h-5 text-blue-600" />
             <div>
               <h2 className="text-sm sm:text-base font-bold text-slate-900">
                 Current Shop Stock Valuation & Asset Balance
@@ -441,11 +442,11 @@ export default function ReportsPage() {
                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                   Expected Retail Value
                 </span>
-                <div className="p-1.5 rounded-lg bg-amber-50 text-amber-600">
+                <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600">
                   <CircleDollarSign className="w-4 h-4" />
                 </div>
               </div>
-              <p className="text-lg sm:text-xl lg:text-2xl font-black text-amber-600 mt-1">
+              <p className="text-lg sm:text-xl lg:text-2xl font-black text-blue-700 mt-1">
                 {formatCurrency(report.inventoryValuation.totalRetailValue, currency)}
               </p>
               <span className="text-[11px] text-slate-400 mt-0.5 block">
@@ -491,7 +492,7 @@ export default function ReportsPage() {
           <div className="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
             <div className="p-3.5 sm:p-4 border-b bg-slate-50 flex justify-between items-center">
               <h3 className="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
-                <Package className="w-4 h-4 text-amber-500" />
+                <Package className="w-4 h-4 text-blue-600" />
                 <span>Inventory Capital by Category</span>
               </h3>
               <span className="text-xs text-slate-500">
@@ -527,7 +528,7 @@ export default function ReportsPage() {
                       <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900">
                         {formatCurrency(cat.costValue, currency)}
                       </td>
-                      <td className="py-2.5 px-3 text-right font-mono text-amber-600 font-semibold">
+                      <td className="py-2.5 px-3 text-right font-mono text-blue-700 font-semibold">
                         {formatCurrency(cat.retailValue, currency)}
                       </td>
                       <td className="py-2.5 px-3 text-right font-mono font-black text-green-600">

@@ -249,7 +249,7 @@ function QuickSalesTerminal() {
               placeholder="🔍 Scan barcode, SKU, or search item name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full border border-slate-300 rounded-lg px-3 py-1.5 pl-8 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50 focus:bg-white transition"
+              className="w-full border border-slate-300 rounded-lg px-3 py-1.5 pl-8 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 bg-slate-50 focus:bg-white transition"
               autoFocus
             />
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
@@ -303,7 +303,7 @@ function QuickSalesTerminal() {
               <span className="hidden xs:inline">Reset</span>
             </button>
 
-            <span className="text-[11px] font-bold bg-amber-100 text-amber-900 px-2 py-1 rounded-lg whitespace-nowrap">
+            <span className="text-[11px] font-bold bg-blue-100 text-blue-900 px-2 py-1 rounded-lg whitespace-nowrap">
               {filteredProducts.length} items
             </span>
           </div>
@@ -318,7 +318,7 @@ function QuickSalesTerminal() {
               onClick={() => setSelectedCategory(cat)}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition ${
                 selectedCategory === cat
-                  ? 'bg-amber-500 text-slate-950 shadow-2xs'
+                  ? 'bg-blue-600 text-white shadow-xs font-black'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
               }`}
             >
@@ -345,7 +345,7 @@ function QuickSalesTerminal() {
         <div className="lg:col-span-2 flex flex-col min-h-0 bg-white rounded-xl border border-slate-200 p-2.5 sm:p-3 shadow-2xs overflow-hidden">
           {loading ? (
             <div className="flex-1 flex flex-col items-center justify-center space-y-2 text-slate-400 text-xs">
-              <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
+              <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
               <span>Connecting to database catalog...</span>
             </div>
           ) : filteredProducts.length === 0 ? (
@@ -355,7 +355,7 @@ function QuickSalesTerminal() {
               <button
                 type="button"
                 onClick={() => { setSearch(''); setSelectedCategory('ALL'); }}
-                className="text-amber-600 font-bold hover:underline text-xs mt-1"
+                className="text-blue-600 font-bold hover:underline text-xs mt-1"
               >
                 Clear all filters
               </button>
@@ -376,7 +376,7 @@ function QuickSalesTerminal() {
                         className={`rounded-xl border p-2.5 sm:p-3 shadow-2xs flex flex-col justify-between transition select-none ${
                           isOutOfStock
                             ? 'opacity-50 border-slate-200 bg-slate-50 cursor-not-allowed'
-                            : 'bg-white hover:border-amber-400 hover:shadow-xs active:scale-[0.99] cursor-pointer border-slate-200'
+                            : 'bg-white hover:border-blue-400 hover:shadow-xs active:scale-[0.99] cursor-pointer border-slate-200'
                         }`}
                       >
                         <div>
@@ -395,7 +395,7 @@ function QuickSalesTerminal() {
                               </div>
                             </div>
                             <div className="text-right shrink-0">
-                              <span className="text-xs sm:text-sm font-black text-amber-600 block">
+                              <span className="text-xs sm:text-sm font-black text-blue-700 block">
                                 {formatCurrency(p.selling_price, currency)}
                               </span>
                             </div>
@@ -413,8 +413,8 @@ function QuickSalesTerminal() {
                             disabled={isOutOfStock}
                             className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center space-x-1 ${
                               inCart
-                                ? 'bg-amber-500 text-slate-950 shadow-2xs'
-                                : 'bg-amber-100 hover:bg-amber-200 text-amber-900'
+                                ? 'bg-blue-600 text-white shadow-xs'
+                                : 'bg-blue-50 hover:bg-blue-100 text-blue-800'
                             }`}
                           >
                             <Plus className="w-3 h-3" />
@@ -436,7 +436,7 @@ function QuickSalesTerminal() {
                       <div
                         key={p.id}
                         onClick={() => !isOutOfStock && addToCart(p)}
-                        className={`px-3 py-2 flex items-center justify-between gap-2 hover:bg-amber-50/60 cursor-pointer transition select-none ${
+                        className={`px-3 py-2 flex items-center justify-between gap-2 hover:bg-blue-50/60 cursor-pointer transition select-none ${
                           isOutOfStock ? 'opacity-40 bg-slate-50 cursor-not-allowed' : ''
                         }`}
                       >
@@ -460,7 +460,7 @@ function QuickSalesTerminal() {
                           }`}>
                             {formatQuantity(p.current_stock)} {p.unit}
                           </span>
-                          <span className="font-extrabold text-amber-600 text-xs min-w-[70px] text-right">
+                          <span className="font-extrabold text-blue-700 text-xs min-w-[70px] text-right">
                             {formatCurrency(p.selling_price, currency)}
                           </span>
                           <button
@@ -468,7 +468,7 @@ function QuickSalesTerminal() {
                             disabled={isOutOfStock}
                             className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center space-x-1 ${
                               inCart
-                                ? 'bg-amber-500 text-slate-950'
+                                ? 'bg-blue-600 text-white'
                                 : 'bg-slate-100 hover:bg-slate-200 text-slate-800'
                             }`}
                           >
@@ -490,7 +490,7 @@ function QuickSalesTerminal() {
           <div className="flex flex-col min-h-0 flex-1">
             <div className="flex items-center justify-between border-b pb-2.5 shrink-0">
               <div className="flex items-center space-x-1.5">
-                <ShoppingCart className="w-4 h-4 text-amber-500" />
+                <ShoppingCart className="w-4 h-4 text-blue-600" />
                 <h2 className="text-xs font-black text-slate-800 uppercase tracking-wider">
                   Sale Terminal Cart
                 </h2>
@@ -544,7 +544,7 @@ function QuickSalesTerminal() {
                             onClick={() => setDirectQuantity(item.id, fracVal)}
                             className={`px-1.5 py-0.5 rounded text-[9px] font-bold border transition ${
                               item.quantity === fracVal
-                                ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-2xs'
+                                ? 'bg-blue-600 text-white border-blue-600 shadow-2xs'
                                 : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
                             }`}
                             title={`Set to ${formatQuantity(fracVal)}`}
@@ -574,7 +574,7 @@ function QuickSalesTerminal() {
                               (e.target as HTMLInputElement).blur();
                             }
                           }}
-                          className="w-11 h-5 text-center font-mono font-bold text-[11px] border border-slate-300 rounded bg-white focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                          className="w-11 h-5 text-center font-mono font-bold text-[11px] border border-slate-300 rounded bg-white focus:ring-1 focus:ring-blue-600 focus:outline-none"
                           placeholder="1/2"
                           title="Type quantity or fraction e.g. 1/2, 1/4, 2.5"
                         />
@@ -612,7 +612,7 @@ function QuickSalesTerminal() {
                 <select
                   value={selectedCustomerId}
                   onChange={(e) => setSelectedCustomerId(e.target.value)}
-                  className="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-amber-500 bg-white"
+                  className="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 bg-white"
                 >
                   <option value="">Walk-in Customer</option>
                   {customers.map(c => (
@@ -631,7 +631,7 @@ function QuickSalesTerminal() {
                 <select
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                  className="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-amber-500 bg-white font-semibold"
+                  className="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 bg-white font-semibold"
                 >
                   <option value="Cash">Cash (Immediate)</option>
                   <option value="Mobile Money">MTN / Airtel Mobile Money</option>
@@ -663,7 +663,7 @@ function QuickSalesTerminal() {
               </div>
               <div className="flex justify-between items-center text-sm sm:text-base font-black text-slate-900">
                 <span>Total Due:</span>
-                <span className="text-amber-600">{formatCurrency(totalAmount, currency)}</span>
+                <span className="text-blue-700">{formatCurrency(totalAmount, currency)}</span>
               </div>
             </div>
 
@@ -673,13 +673,13 @@ function QuickSalesTerminal() {
               disabled={cart.length === 0 || isPending}
               className={`w-full py-2.5 rounded-xl font-black text-xs sm:text-sm transition shadow-xs flex items-center justify-center space-x-1.5 ${
                 cart.length > 0 && !isPending
-                  ? 'bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 cursor-pointer'
+                  ? 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white cursor-pointer shadow-md shadow-blue-900/20'
                   : 'bg-slate-200 text-slate-400 cursor-not-allowed'
               }`}
             >
               {isPending ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-slate-900" />
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
                   <span>Processing Sale...</span>
                 </>
               ) : (
@@ -696,13 +696,13 @@ function QuickSalesTerminal() {
       <div className="lg:hidden fixed bottom-0 inset-x-0 bg-slate-900 text-white p-3 z-30 flex items-center justify-between shadow-2xl border-t border-slate-800">
         <div>
           <div className="text-xs text-slate-400">{totalItemCount} items in cart</div>
-          <div className="text-base font-black text-amber-400">{formatCurrency(totalAmount, currency)}</div>
+          <div className="text-base font-black text-blue-400">{formatCurrency(totalAmount, currency)}</div>
         </div>
         <button
           onClick={() => setMobileCartOpen(true)}
           disabled={cart.length === 0}
           className={`px-4 py-2 rounded-lg font-bold text-xs transition ${
-            cart.length > 0 ? 'bg-amber-500 hover:bg-amber-600 text-slate-950' : 'bg-slate-700 text-slate-400'
+            cart.length > 0 ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-900/30' : 'bg-slate-700 text-slate-400'
           }`}
         >
           View Cart & Pay 🛒
@@ -736,7 +736,7 @@ function QuickSalesTerminal() {
                           type="button"
                           onClick={() => setDirectQuantity(item.id, fracVal)}
                           className={`px-1.5 py-0.5 rounded text-[10px] font-bold border ${
-                            item.quantity === fracVal ? 'bg-amber-500 text-slate-950 border-amber-500' : 'bg-slate-50 text-slate-600 border-slate-200'
+                            item.quantity === fracVal ? 'bg-blue-600 text-white border-blue-600' : 'bg-slate-50 text-slate-600 border-slate-200'
                           }`}
                         >
                           {formatQuantity(fracVal)}
@@ -768,7 +768,7 @@ function QuickSalesTerminal() {
                   <select
                     value={selectedCustomerId}
                     onChange={(e) => setSelectedCustomerId(e.target.value)}
-                    className="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-amber-500 bg-white"
+                    className="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-blue-600 bg-white"
                   >
                     <option value="">Walk-in Customer</option>
                     {customers.map(c => (
@@ -784,7 +784,7 @@ function QuickSalesTerminal() {
                   <select
                     value={paymentMethod}
                     onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                    className="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-amber-500 bg-white font-semibold"
+                    className="w-full border border-slate-300 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-blue-600 bg-white font-semibold"
                   >
                     <option value="Cash">Cash</option>
                     <option value="Mobile Money">MTN / Airtel MoMo</option>
@@ -805,18 +805,18 @@ function QuickSalesTerminal() {
 
               <div className="flex justify-between items-center font-black text-base text-slate-900 pt-1">
                 <span className="text-xs text-slate-500 font-bold uppercase">Total Due:</span>
-                <span className="text-amber-600 text-lg font-black">{formatCurrency(totalAmount, currency)}</span>
+                <span className="text-blue-700 text-lg font-black">{formatCurrency(totalAmount, currency)}</span>
               </div>
 
               <button
                 type="button"
                 onClick={handleCheckout}
                 disabled={isPending || cart.length === 0}
-                className="w-full py-3 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-black rounded-xl text-sm transition shadow-sm flex items-center justify-center space-x-1.5"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-black rounded-xl text-sm transition shadow-md shadow-blue-900/30 flex items-center justify-center space-x-1.5"
               >
                 {isPending ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
                     <span>Committing Sale...</span>
                   </>
                 ) : (
@@ -841,7 +841,7 @@ export default function QuickSalesPage() {
   return (
     <Suspense fallback={
       <div className="py-20 text-center text-slate-400 text-sm flex items-center justify-center space-x-2">
-        <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
+        <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
         <span>Loading Quick Sales Terminal...</span>
       </div>
     }>

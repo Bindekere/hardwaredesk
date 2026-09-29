@@ -185,14 +185,14 @@ export default function StockTakePage() {
           <div className="space-y-2.5 max-h-[60vh] overflow-y-auto pr-1">
             {loading ? (
               <div className="py-16 text-center text-slate-400 text-xs flex flex-col items-center justify-center space-y-2">
-                <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
+                <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
                 <span>Loading catalog items for stock count...</span>
               </div>
             ) : (
               counts.map((item, idx) => (
                 <div
                   key={item.id}
-                  className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50 p-3 rounded-xl border border-slate-100 gap-2 hover:border-amber-300 transition"
+                  className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50 p-3 rounded-xl border border-slate-100 gap-2 hover:border-blue-300 transition"
                 >
                   <div>
                     <div className="font-bold text-slate-900 text-sm">{item.name}</div>
@@ -210,7 +210,7 @@ export default function StockTakePage() {
                         newCounts[idx].physical = e.target.value;
                         setCounts(newCounts);
                       }}
-                      className="w-full sm:w-36 border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono font-black text-center focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+                      className="w-full sm:w-36 border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono font-black text-center focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                     />
                   </div>
                 </div>
@@ -221,7 +221,7 @@ export default function StockTakePage() {
           <button
             type="submit"
             disabled={isPending || loading}
-            className="w-full py-3 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-black rounded-xl text-xs sm:text-sm transition shadow-xs flex items-center justify-center space-x-2"
+            className="w-full py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-black rounded-xl text-xs sm:text-sm transition shadow-md shadow-blue-900/20 flex items-center justify-center space-x-2"
           >
             {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <ClipboardCheck className="w-4 h-4" />}
             <span>Submit Physical Counts & Calculate Variances</span>
@@ -326,7 +326,7 @@ export default function StockTakePage() {
                         placeholder="Manager reason note (e.g. verified broken in stock room)..."
                         value={approvalNotes[item.id] || ''}
                         onChange={(e) => setApprovalNotes({ ...approvalNotes, [item.id]: e.target.value })}
-                        className="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-amber-500"
+                        className="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-600"
                       />
                       <div className="flex space-x-2">
                         <button

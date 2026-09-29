@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { UserRole } from '@/lib/types';
 import { ShoppingCart, Search, Menu, X, Shield, PlusCircle, LogOut, Lock } from 'lucide-react';
 import { InstallAppButton } from '@/components/PwaInstallPrompt';
+import BRAND_CONFIG from '@/lib/brandConfig';
 
 interface NavbarProps {
   userRole: UserRole;
@@ -52,12 +53,12 @@ export default function Navbar({
 
   const getRoleBadge = (role: UserRole) => {
     if (role === 'ADMIN') {
-      return { icon: '👑', label: 'Admin', bg: 'bg-amber-500/20 text-amber-300 border-amber-500/40' };
+      return { icon: '👑', label: 'Admin', bg: 'bg-blue-500/20 text-blue-300 border-blue-500/40' };
     }
     if (role === 'STOREKEEPER') {
-      return { icon: '📦', label: 'Storekeeper', bg: 'bg-blue-500/20 text-blue-300 border-blue-500/40' };
+      return { icon: '📦', label: 'Storekeeper', bg: 'bg-sky-500/20 text-sky-300 border-sky-500/40' };
     }
-    return { icon: '🛒', label: 'Cashier', bg: 'bg-green-500/20 text-green-300 border-green-500/40' };
+    return { icon: '🛒', label: 'Cashier', bg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' };
   };
 
   const badge = getRoleBadge(userRole);
@@ -68,21 +69,21 @@ export default function Navbar({
         <div className="flex items-center space-x-2.5">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-1.5 rounded-md text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            className="lg:hidden p-1.5 rounded-md text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
 
           <Link href="/" className="flex items-center space-x-2 group">
-            <div className="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center font-bold text-slate-950 text-base shadow-sm group-hover:bg-amber-400 transition">
-              HD
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-black text-white text-sm shadow-sm group-hover:bg-blue-500 transition">
+              {BRAND_CONFIG.badge}
             </div>
             <div className="flex flex-col">
-              <span className="text-lg sm:text-xl font-bold tracking-wide text-amber-500 leading-tight">
-                HardwareDesk
+              <span className="text-lg sm:text-xl font-bold tracking-wide text-white leading-tight">
+                {BRAND_CONFIG.shopName}
               </span>
-              <span className="text-[10px] text-slate-400 font-medium">Uganda POS & Stock</span>
+              <span className="text-[10px] text-blue-300 font-medium">{BRAND_CONFIG.tagline}</span>
             </div>
           </Link>
         </div>
@@ -92,7 +93,7 @@ export default function Navbar({
           <InstallAppButton className="text-[10px] py-1 px-2 font-extrabold" />
           <Link
             href="/sales"
-            className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-2 py-1 rounded text-xs transition shadow-sm flex items-center space-x-1"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-2.5 py-1 rounded text-xs transition shadow-sm flex items-center space-x-1"
           >
             <PlusCircle className="w-3.5 h-3.5" />
             <span>Sale</span>
@@ -102,7 +103,7 @@ export default function Navbar({
             className="bg-slate-800 hover:bg-slate-700 text-slate-300 p-1.5 rounded border border-slate-700 text-xs"
             title="Lock Terminal"
           >
-            <Lock className="w-3.5 h-3.5 text-amber-400" />
+            <Lock className="w-3.5 h-3.5 text-blue-400" />
           </button>
         </div>
       </div>
@@ -116,14 +117,14 @@ export default function Navbar({
             placeholder="Search products / barcode (/)"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-slate-800 text-xs sm:text-sm text-gray-200 rounded px-2.5 sm:px-3 py-1.5 pl-8 w-full sm:w-56 md:w-64 focus:outline-none focus:ring-1 focus:ring-amber-500 border border-slate-700 placeholder-slate-400"
+            className="bg-slate-800 text-xs sm:text-sm text-gray-200 rounded px-2.5 sm:px-3 py-1.5 pl-8 w-full sm:w-56 md:w-64 focus:outline-none focus:ring-1 focus:ring-blue-500 border border-slate-700 placeholder-slate-400"
           />
           <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
         </form>
 
         <Link
           href="/sales"
-          className="hidden sm:inline-flex items-center space-x-1.5 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-900 font-bold px-3 py-1.5 rounded text-xs sm:text-sm transition shadow-sm whitespace-nowrap"
+          className="hidden sm:inline-flex items-center space-x-1.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold px-3 py-1.5 rounded text-xs sm:text-sm transition shadow-sm whitespace-nowrap"
         >
           <ShoppingCart className="w-4 h-4" />
           <span>+ Quick Sale</span>
@@ -134,7 +135,7 @@ export default function Navbar({
           <button
             onClick={() => setCurrency('UGX')}
             className={`px-2 py-1 rounded font-bold transition text-[11px] ${
-              currency === 'UGX' ? 'bg-amber-500 text-slate-900 shadow-xs' : 'text-slate-400 hover:text-white'
+              currency === 'UGX' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
             }`}
             title="Uganda Shillings (UGX)"
           >
@@ -143,7 +144,7 @@ export default function Navbar({
           <button
             onClick={() => setCurrency('USD')}
             className={`px-2 py-1 rounded font-bold transition text-[11px] ${
-              currency === 'USD' ? 'bg-amber-500 text-slate-900 shadow-xs' : 'text-slate-400 hover:text-white'
+              currency === 'USD' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
             }`}
             title="US Dollar (USD)"
           >
@@ -161,10 +162,10 @@ export default function Navbar({
           </span>
           <button
             onClick={onLogout}
-            className="text-slate-400 hover:text-amber-400 p-1 rounded hover:bg-slate-700/60 transition flex items-center space-x-1"
+            className="text-slate-400 hover:text-blue-400 p-1 rounded hover:bg-slate-700/60 transition flex items-center space-x-1"
             title="Lock & Switch Account (Requires Password)"
           >
-            <Lock className="w-3.5 h-3.5 text-amber-400" />
+            <Lock className="w-3.5 h-3.5 text-blue-400" />
             <span className="hidden md:inline text-[10px] text-slate-300 font-semibold">Lock</span>
           </button>
         </div>

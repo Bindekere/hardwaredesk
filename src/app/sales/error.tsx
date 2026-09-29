@@ -29,7 +29,7 @@ export default function SalesError({
 
         <button
           onClick={() => reset()}
-          className="w-full py-2.5 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-bold rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-sm"
+          className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-md shadow-blue-900/20"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           <span>Reload Sales Terminal</span>

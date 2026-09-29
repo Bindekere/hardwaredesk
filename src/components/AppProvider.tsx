@@ -5,6 +5,7 @@ import { UserRole } from '@/lib/types';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import LoginScreen from '@/components/LoginScreen';
+import { BRAND_CONFIG } from '@/lib/brandConfig';
 
 interface AppContextType {
   isAuthenticated: boolean;
@@ -85,10 +86,10 @@ export default function AppProvider({ children }: { children: React.ReactNode })
   // Prevent flash before checking localStorage
   if (!isHydrated) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-amber-500 font-bold">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-blue-500 font-bold">
         <div className="flex flex-col items-center space-y-3">
-          <div className="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" />
-          <span className="text-xs font-mono tracking-wider text-slate-400">Loading HardwareDesk...</span>
+          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <span className="text-xs font-mono tracking-wider text-slate-400">Loading {BRAND_CONFIG.shopName}...</span>
         </div>
       </div>
     );

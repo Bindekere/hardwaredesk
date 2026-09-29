@@ -1,7 +1,7 @@
 {
-  "name": "HardwareDesk — Uganda Hardware POS",
-  "short_name": "HardwareDesk",
-  "description": "Database-backed Hardware POS, Inventory, and Ledger Management for Hardware Shops in Uganda.",
+  "name": "S.H Paint World — Uganda POS & Inventory",
+  "short_name": "S.H Paint World",
+  "description": "Database-backed POS, Inventory, and Ledger Management for S.H Paint World in Uganda.",
   "start_url": "/",
   "id": "/",
   "scope": "/",

@@ -53,7 +53,7 @@ export default function DashboardPage() {
       <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2.5">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Dashboard Overview</h1>
-          <p className="text-xs sm:text-sm text-slate-500">Live operational metrics & hardware sales performance</p>
+          <p className="text-xs sm:text-sm text-slate-500">Live operational metrics & store sales performance</p>
         </div>
         <div className="flex items-center space-x-2">
           <button
@@ -61,7 +61,7 @@ export default function DashboardPage() {
             disabled={refreshing}
             className="bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition shadow-xs"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-amber-500' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-blue-600' : ''}`} />
             <span>{refreshing ? 'Updating...' : 'Sync Live'}</span>
           </button>
           <span className="text-xs bg-slate-200 text-slate-800 font-bold px-2.5 py-1 rounded-lg">
@@ -103,7 +103,7 @@ export default function DashboardPage() {
 
         <Link
           href="/inventory"
-          className="bg-white p-4 sm:p-5 rounded-xl shadow-xs border border-slate-200 hover:border-amber-400 hover:shadow-sm transition group"
+          className="bg-white p-4 sm:p-5 rounded-xl shadow-xs border border-slate-200 hover:border-blue-400 hover:shadow-sm transition group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Low Stock Alerts</span>
@@ -131,7 +131,7 @@ export default function DashboardPage() {
               <h2 className="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider">
                 Recent Sales Transactions
               </h2>
-              <Link href="/receipt-book" className="text-xs font-semibold text-amber-600 hover:text-amber-700">
+              <Link href="/receipt-book" className="text-xs font-semibold text-blue-600 hover:text-blue-700">
                 Receipt Book &rarr;
               </Link>
             </div>
@@ -198,7 +198,7 @@ export default function DashboardPage() {
           <div className="pt-3 mt-3 border-t flex justify-end">
             <Link
               href="/sales"
-              className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-xs flex items-center space-x-1"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-md shadow-blue-900/20 flex items-center space-x-1"
             >
               <ShoppingCart className="w-3.5 h-3.5" />
               <span>Make a Sale</span>
@@ -210,7 +210,7 @@ export default function DashboardPage() {
           <div>
             <div className="flex justify-between items-center mb-3">
               <h2 className="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
-                <Award className="w-4 h-4 text-amber-500" />
+                <Award className="w-4 h-4 text-blue-600" />
                 <span>Top Fast-Moving Products</span>
               </h2>
               <span className="text-[11px] text-slate-400 font-medium">Ranked by units sold</span>
@@ -226,9 +226,9 @@ export default function DashboardPage() {
                   <li key={idx} className="flex justify-between items-center py-2.5">
                     <div className="flex items-center space-x-3">
                       <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
-                        idx === 0 ? 'bg-amber-500 text-slate-950 shadow-xs' :
+                        idx === 0 ? 'bg-blue-600 text-white shadow-xs' :
                         idx === 1 ? 'bg-slate-300 text-slate-900' :
-                        idx === 2 ? 'bg-amber-700 text-white' : 'bg-slate-100 text-slate-600'
+                        idx === 2 ? 'bg-slate-700 text-white' : 'bg-slate-100 text-slate-600'
                       }`}>
                         {idx + 1}
                       </span>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Receipt } from '@/lib/types';
 import { formatCurrency, formatDateTime, formatQuantity } from '@/lib/formatters';
 import { Printer, Download, X, CheckCircle, Store, FileText } from 'lucide-react';
+import BRAND_CONFIG from '@/lib/brandConfig';
 
 interface ReceiptModalProps {
   receipt: Receipt | null;
@@ -17,8 +18,8 @@ export default function ReceiptModal({
   receipt,
   onClose,
   currency = 'UGX',
-  shopName = 'HardwareDesk Uganda',
-  shopContact = 'Tel: +256 700 000 000 | Kampala, Uganda',
+  shopName = BRAND_CONFIG.receipt.shopName,
+  shopContact = BRAND_CONFIG.receipt.contactLine,
 }: ReceiptModalProps) {
   const [printFormat, setPrintFormat] = useState<'80mm' | 'A4'>('80mm');
 
@@ -133,7 +134,7 @@ export default function ReceiptModal({
               .header { display: flex; justify-content: space-between; border-bottom: 2px solid #0f172a; padding-bottom: 20px; }
               .brand h1 { margin: 0; font-size: 24px; color: #0f172a; }
               .invoice-title { text-align: right; }
-              .invoice-title h2 { margin: 0; font-size: 22px; color: #d97706; }
+              .invoice-title h2 { margin: 0; font-size: 22px; color: #1e3a8a; }
               .meta-grid { display: flex; justify-content: space-between; margin: 25px 0; }
               table { width: 100%; border-collapse: collapse; margin: 20px 0; }
               th, td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; }
@@ -148,7 +149,7 @@ export default function ReceiptModal({
             <div class="header">
               <div class="brand">
                 <h1>${shopName}</h1>
-                <p style="margin: 4px 0; color: #64748b;">Hardware, Tools & Construction Supplies</p>
+                <p style="margin: 4px 0; color: #1e3a8a; font-weight: 600;">Quality Paints, Finishes & Hardware Supplies</p>
                 <p style="margin: 2px 0; font-size: 11px;">${shopContact}</p>
               </div>
               <div class="invoice-title">
@@ -271,7 +272,7 @@ export default function ReceiptModal({
           </div>
           <div className="flex justify-between">
             <span className="text-slate-500">Payment:</span>
-            <span className="font-semibold text-amber-800 bg-amber-100 px-1.5 rounded">
+            <span className="font-semibold text-blue-800 bg-blue-100 px-1.5 rounded">
               {receipt.payment_method}
             </span>
           </div>
@@ -310,7 +311,7 @@ export default function ReceiptModal({
           <button
             type="button"
             onClick={handlePrint}
-            className="px-5 py-2 text-xs sm:text-sm font-bold bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 rounded-xl shadow-xs transition flex items-center space-x-1.5"
+            className="px-5 py-2 text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl shadow-xs transition flex items-center space-x-1.5"
           >
             <Printer className="w-4 h-4" />
             <span>Print {printFormat === '80mm' ? 'Thermal' : 'A4'}</span>

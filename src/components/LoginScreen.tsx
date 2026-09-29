@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { UserRole } from '@/lib/types';
 import { Shield, KeyRound, Lock, ArrowRight, AlertCircle, Store, CheckCircle2 } from 'lucide-react';
 import { InstallAppButton } from '@/components/PwaInstallPrompt';
+import { BRAND_CONFIG } from '@/lib/brandConfig';
 
 interface LoginScreenProps {
   onLogin: (role: UserRole) => void;
@@ -56,24 +57,24 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 selection:bg-amber-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 selection:bg-blue-600 selection:text-white">
       {/* Background Glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-3xl" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[520px] h-[520px] bg-blue-600/15 rounded-full blur-3xl" />
       </div>
 
       <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-8 relative z-10 space-y-6">
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 bg-amber-500 text-slate-950 font-black text-2xl rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-amber-500/20">
-            H
+          <div className="w-14 h-14 bg-blue-600 text-white font-black text-2xl rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-blue-600/30">
+            {BRAND_CONFIG.badge}
           </div>
           <div>
             <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center justify-center gap-1.5">
-              HardwareDesk <span className="text-xs bg-amber-500/20 text-amber-400 font-mono px-2 py-0.5 rounded border border-amber-500/30">UG</span>
+              {BRAND_CONFIG.shopName} <span className="text-xs bg-blue-900/80 text-blue-300 font-mono px-2 py-0.5 rounded border border-blue-700/60">{BRAND_CONFIG.badge}</span>
             </h1>
             <p className="text-xs text-slate-400 mt-0.5">
-              Uganda Hardware Shop POS & Stock Management
+              {BRAND_CONFIG.businessType} · POS & Stock Terminal
             </p>
           </div>
         </div>
@@ -89,7 +90,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
               onClick={() => { setSelectedRole('ADMIN'); setPassword(''); setError(null); }}
               className={`py-2 px-1 text-xs font-extrabold rounded-xl transition ${
                 selectedRole === 'ADMIN'
-                  ? 'bg-amber-500 text-slate-950 shadow-md font-black'
+                  ? 'bg-blue-600 text-white shadow-md font-black'
                   : 'text-slate-400 hover:text-white hover:bg-slate-900'
               }`}
             >
@@ -100,7 +101,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
               onClick={() => { setSelectedRole('STOREKEEPER'); setPassword(''); setError(null); }}
               className={`py-2 px-1 text-xs font-extrabold rounded-xl transition ${
                 selectedRole === 'STOREKEEPER'
-                  ? 'bg-amber-500 text-slate-950 shadow-md font-black'
+                  ? 'bg-blue-600 text-white shadow-md font-black'
                   : 'text-slate-400 hover:text-white hover:bg-slate-900'
               }`}
             >
@@ -111,7 +112,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
               onClick={() => { setSelectedRole('CASHIER'); setPassword(''); setError(null); }}
               className={`py-2 px-1 text-xs font-extrabold rounded-xl transition ${
                 selectedRole === 'CASHIER'
-                  ? 'bg-amber-500 text-slate-950 shadow-md font-black'
+                  ? 'bg-blue-600 text-white shadow-md font-black'
                   : 'text-slate-400 hover:text-white hover:bg-slate-900'
               }`}
             >
@@ -125,7 +126,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
           <div>
             <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
               <span className="flex items-center space-x-1.5">
-                <KeyRound className="w-3.5 h-3.5 text-amber-400" />
+                <KeyRound className="w-3.5 h-3.5 text-blue-400" />
                 <span>Enter {selectedRole} Password / PIN</span>
               </span>
               <span className="text-[10px] text-slate-500 font-mono">
@@ -141,7 +142,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
                 placeholder="••••"
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setError(null); }}
-                className="w-full bg-slate-950 border border-slate-700 text-white font-mono text-center tracking-[0.4em] text-2xl py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
+                className="w-full bg-slate-950 border border-slate-700 text-white font-mono text-center tracking-[0.4em] text-2xl py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 autoFocus
               />
             </div>
@@ -165,7 +166,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
                   btn === 'CLEAR'
                     ? 'bg-slate-800/80 text-red-400 hover:bg-red-500/20 text-xs'
                     : btn === 'BACK'
-                    ? 'bg-slate-800/80 text-amber-400 hover:bg-amber-500/20 text-xs'
+                    ? 'bg-slate-800/80 text-blue-400 hover:bg-blue-500/20 text-xs'
                     : 'bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-white shadow-xs'
                 }`}
               >
@@ -179,7 +180,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
             disabled={password.length === 0}
             className={`w-full py-3.5 rounded-2xl font-black text-sm transition shadow-lg flex items-center justify-center space-x-2 ${
               password.length > 0
-                ? 'bg-amber-500 hover:bg-amber-400 active:scale-[0.99] text-slate-950 shadow-amber-500/20 cursor-pointer'
+                ? 'bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white shadow-blue-600/30 cursor-pointer'
                 : 'bg-slate-800 text-slate-500 cursor-not-allowed'
             }`}
           >
@@ -188,13 +189,13 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
             <ArrowRight className="w-4 h-4" />
           </button>
 
-          <InstallAppButton className="w-full justify-center py-2.5 text-xs bg-slate-800/80 hover:bg-slate-800 text-amber-300 border-slate-700/80 rounded-xl" />
+          <InstallAppButton className="w-full justify-center py-2.5 text-xs bg-slate-800/80 hover:bg-slate-800 text-blue-300 border-slate-700/80 rounded-xl" />
         </form>
 
         {/* Security Footer Note */}
         <div className="pt-2 border-t border-slate-800/60 text-center">
           <p className="text-[11px] text-slate-500">
-            Protected Point of Sale Terminal · Authorized Store Personnel Only
+            Powered by {BRAND_CONFIG.engineName} · {BRAND_CONFIG.shopName}
           </p>
         </div>
       </div>

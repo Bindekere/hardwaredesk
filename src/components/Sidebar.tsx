@@ -17,6 +17,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import { InstallAppButton } from '@/components/PwaInstallPrompt';
+import { BRAND_CONFIG } from '@/lib/brandConfig';
 
 interface SidebarProps {
   userRole: UserRole;
@@ -81,11 +82,11 @@ export default function Sidebar({
                 onClick={() => setMobileMenuOpen(false)}
                 className={`flex items-center space-x-2.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition ${
                   isActive
-                    ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
+                    ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-900/30'
                     : 'text-slate-300 hover:bg-slate-700 hover:text-white'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-slate-950' : 'text-slate-400'}`} />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                 <span>{item.name}</span>
               </Link>
             );
@@ -98,7 +99,7 @@ export default function Sidebar({
           {onLogout && (
             <button
               onClick={onLogout}
-              className="w-full flex items-center justify-center space-x-2 bg-slate-900 hover:bg-slate-950 text-amber-400 border border-slate-700 py-2 px-3 rounded-xl font-bold text-xs transition shadow-sm"
+              className="w-full flex items-center justify-center space-x-2 bg-slate-900 hover:bg-slate-950 text-blue-400 border border-slate-700 py-2 px-3 rounded-xl font-bold text-xs transition shadow-sm"
             >
               <Lock className="w-3.5 h-3.5" />
               <span>Lock Terminal</span>
@@ -107,10 +108,13 @@ export default function Sidebar({
 
           <div className="px-1 space-y-0.5">
             <div className="font-semibold text-slate-200 flex items-center justify-between">
-              <span>HardwareDesk</span>
-              <span className="text-[10px] bg-slate-700 text-amber-400 px-1.5 py-0.5 rounded font-mono">UG</span>
+              <span className="truncate">{BRAND_CONFIG.shopName}</span>
+              <span className="text-[10px] bg-blue-900/80 text-blue-300 border border-blue-700/60 px-1.5 py-0.5 rounded font-mono shrink-0 ml-1">{BRAND_CONFIG.badge}</span>
             </div>
-            <div className="text-[10px] text-slate-400">Uganda Hardware Engine</div>
+            <div className="text-[10px] text-slate-400 flex items-center justify-between">
+              <span>{BRAND_CONFIG.engineName}</span>
+              <span className="text-[9px] text-slate-500 font-mono">v{BRAND_CONFIG.version}</span>
+            </div>
           </div>
         </div>
       </aside>

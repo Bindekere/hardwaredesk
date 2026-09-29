@@ -199,7 +199,7 @@ export default function LedgerPage() {
           </button>
           <button
             onClick={() => setShowAddEntryModal(true)}
-            className="bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition shadow-xs flex items-center space-x-1"
+            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition shadow-md shadow-blue-900/20 flex items-center space-x-1"
           >
             <Plus className="w-4 h-4" />
             <span>+ Add Account</span>
@@ -221,10 +221,10 @@ export default function LedgerPage() {
         <div
           onClick={() => setActiveTab('DEBTORS')}
           className={`p-4 sm:p-5 rounded-2xl shadow-xs border cursor-pointer transition ${
-            activeTab === 'DEBTORS' ? 'bg-amber-50/70 border-amber-400 ring-2 ring-amber-400/50' : 'bg-white border-slate-200'
+            activeTab === 'DEBTORS' ? 'bg-blue-50/70 border-blue-400 ring-2 ring-blue-400/50' : 'bg-white border-slate-200'
           }`}
         >
-          <span className="text-xs font-bold text-amber-900 uppercase tracking-wider block">Customers Owe Us (Debtors)</span>
+          <span className="text-xs font-bold text-blue-950 uppercase tracking-wider block">Customers Owe Us (Debtors)</span>
           <p className="text-xl sm:text-2xl font-black text-red-600 mt-1.5">{formatCurrency(totalDebtorsBalance, currency)}</p>
           <span className="text-xs text-slate-500 mt-1 block">Uncollected customer credit sales</span>
         </div>
@@ -247,7 +247,7 @@ export default function LedgerPage() {
           <span className={`text-xs font-bold uppercase tracking-wider block ${activeTab === 'CREDITORS' ? 'text-slate-300' : 'text-slate-600'}`}>
             We Owe Suppliers (Creditors)
           </span>
-          <p className={`text-xl sm:text-2xl font-black mt-1.5 ${activeTab === 'CREDITORS' ? 'text-amber-400' : 'text-slate-900'}`}>
+          <p className={`text-xl sm:text-2xl font-black mt-1.5 ${activeTab === 'CREDITORS' ? 'text-blue-400' : 'text-slate-900'}`}>
             {formatCurrency(totalCreditorsBalance, currency)}
           </p>
           <span className={`text-xs mt-1 block ${activeTab === 'CREDITORS' ? 'text-slate-400' : 'text-slate-500'}`}>
@@ -262,7 +262,7 @@ export default function LedgerPage() {
             <button
               onClick={() => setActiveTab('DEBTORS')}
               className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition ${
-                activeTab === 'DEBTORS' ? 'bg-amber-500 text-slate-950 shadow-xs' : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
+                activeTab === 'DEBTORS' ? 'bg-blue-600 text-white shadow-xs' : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
               }`}
             >
               Debtors & Store Credits
@@ -283,7 +283,7 @@ export default function LedgerPage() {
               placeholder={`Search ${activeTab === 'DEBTORS' ? 'customer' : 'supplier'} name or phone...`}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="border border-slate-300 rounded-lg px-3 py-2 pl-9 text-xs sm:text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+              className="border border-slate-300 rounded-lg px-3 py-2 pl-9 text-xs sm:text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
             />
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
           </div>
@@ -357,7 +357,7 @@ export default function LedgerPage() {
                         {balance > 0 && (
                           <button
                             onClick={() => { setShowPayModal(item); setPayAmount(String(balance)); }}
-                            className="bg-amber-500 hover:bg-amber-600 text-slate-950 px-2.5 py-1 rounded-lg text-xs font-bold transition shadow-xs inline-flex items-center space-x-1"
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition shadow-xs inline-flex items-center space-x-1"
                           >
                             <CreditCard className="w-3 h-3" />
                             <span>Pay</span>
@@ -451,7 +451,7 @@ export default function LedgerPage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 rounded-xl shadow-xs"
+                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl shadow-md shadow-blue-900/20"
                 >
                   {isPending ? 'Saving...' : 'Confirm Payment'}
                 </button>
@@ -535,7 +535,7 @@ export default function LedgerPage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 rounded-xl shadow-xs"
+                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl shadow-md shadow-blue-900/20"
                 >
                   {isPending ? 'Saving...' : 'Save Account'}
                 </button>

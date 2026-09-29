@@ -210,7 +210,7 @@ export default function PurchasesPage() {
           </button>
           <button
             onClick={() => setShowNewPurchaseModal(true)}
-            className="bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition shadow-xs flex items-center space-x-1"
+            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition shadow-md shadow-blue-900/20 flex items-center space-x-1"
           >
             <Truck className="w-4 h-4" />
             <span>+ Record Stock PO</span>
@@ -250,12 +250,12 @@ export default function PurchasesPage() {
         <div className="bg-white rounded-xl shadow-xs border border-slate-200 p-4 sm:p-5">
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
-              <Building2 className="w-4 h-4 text-amber-500" />
+              <Building2 className="w-4 h-4 text-blue-600" />
               <span>Suppliers & Creditor Accounts</span>
             </h2>
             <button
               onClick={() => setShowAddSupplierModal(true)}
-              className="text-xs font-bold text-amber-600 hover:text-amber-700"
+              className="text-xs font-bold text-blue-600 hover:text-blue-700"
             >
               + Add
             </button>
@@ -284,7 +284,7 @@ export default function PurchasesPage() {
                     {s.balance_due > 0 && (
                       <button
                         onClick={() => { setShowPayModal(s); setPayAmount(String(s.balance_due)); }}
-                        className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-2.5 py-1 rounded text-xs transition shadow-xs inline-flex items-center space-x-1"
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-2.5 py-1 rounded text-xs transition shadow-xs inline-flex items-center space-x-1"
                       >
                         <CreditCard className="w-3 h-3" />
                         <span>Pay</span>
@@ -300,7 +300,7 @@ export default function PurchasesPage() {
         <div className="bg-white rounded-xl shadow-xs border border-slate-200 p-4 sm:p-5">
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
-              <Truck className="w-4 h-4 text-amber-500" />
+              <Truck className="w-4 h-4 text-blue-600" />
               <span>Purchase Invoices History</span>
             </h2>
             <span className="text-[11px] text-slate-400 font-medium">Automatic stock increase</span>
@@ -347,7 +347,7 @@ export default function PurchasesPage() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-4 sm:p-6 space-y-4 my-8 shadow-2xl border border-gray-100">
             <div className="flex justify-between items-center border-b pb-3">
               <div className="flex items-center space-x-2">
-                <Truck className="w-5 h-5 text-amber-500" />
+                <Truck className="w-5 h-5 text-blue-600" />
                 <h3 className="text-base sm:text-lg font-bold text-slate-900">Record Inbound Stock Purchase</h3>
               </div>
               <button onClick={() => setShowNewPurchaseModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
@@ -387,7 +387,7 @@ export default function PurchasesPage() {
                   <button
                     type="button"
                     onClick={handleAddPurchaseLine}
-                    className="text-xs font-bold text-amber-600 hover:text-amber-700"
+                    className="text-xs font-bold text-blue-600 hover:text-blue-700"
                   >
                     + Add Product Line
                   </button>
@@ -453,7 +453,7 @@ export default function PurchasesPage() {
                               newItems[idx].unitCost = e.target.value;
                               setPurchaseForm({ ...purchaseForm, items: newItems });
                             }}
-                            className="w-full border border-slate-300 rounded px-2 py-1 text-xs font-bold font-mono text-amber-700"
+                            className="w-full border border-slate-300 rounded px-2 py-1 text-xs font-bold font-mono text-blue-700"
                           />
                         </div>
                       </div>
@@ -499,7 +499,7 @@ export default function PurchasesPage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 rounded-xl shadow-xs flex items-center space-x-1"
+                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl shadow-md shadow-blue-900/20 flex items-center space-x-1"
                 >
                   {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                   <span>Save PO & Restock</span>
@@ -579,7 +579,7 @@ export default function PurchasesPage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 rounded-xl shadow-xs"
+                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl shadow-md shadow-blue-900/20"
                 >
                   Save Supplier
                 </button>
@@ -642,7 +642,7 @@ export default function PurchasesPage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 rounded-xl shadow-xs"
+                  className="px-5 py-2 text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl shadow-md shadow-blue-900/20"
                 >
                   Confirm Settlement
                 </button>

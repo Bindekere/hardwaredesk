@@ -78,7 +78,7 @@ export default function ReceiptBookPage() {
               placeholder="Search Receipt # or Customer..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="border border-slate-300 rounded-lg px-3 py-2 pl-9 text-xs sm:text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50 focus:bg-white transition"
+              className="border border-slate-300 rounded-lg px-3 py-2 pl-9 text-xs sm:text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-600 bg-slate-50 focus:bg-white transition"
             />
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
           </div>
@@ -86,7 +86,7 @@ export default function ReceiptBookPage() {
           <select
             value={periodFilter}
             onChange={(e) => setPeriodFilter(e.target.value as any)}
-            className="border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm bg-white font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500"
+            className="border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm bg-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600"
           >
             <option value="ALL">All Recorded Time</option>
             <option value="TODAY">Today Only</option>
@@ -95,24 +95,24 @@ export default function ReceiptBookPage() {
         </form>
 
         {periodFilter === 'CUSTOM' && (
-          <div className="flex flex-wrap items-center gap-2 text-xs bg-amber-50 p-2.5 rounded-lg border border-amber-200">
+          <div className="flex flex-wrap items-center gap-2 text-xs bg-blue-50 p-2.5 rounded-lg border border-blue-200">
             <div className="flex items-center space-x-1.5">
-              <Calendar className="w-3.5 h-3.5 text-amber-800" />
-              <span className="text-amber-800 font-bold">From:</span>
+              <Calendar className="w-3.5 h-3.5 text-blue-800" />
+              <span className="text-blue-900 font-bold">From:</span>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="border border-amber-300 rounded px-2 py-1 bg-white text-xs"
+                className="border border-blue-300 rounded px-2 py-1 bg-white text-xs"
               />
             </div>
             <div className="flex items-center space-x-1.5">
-              <span className="text-amber-800 font-bold">To:</span>
+              <span className="text-blue-900 font-bold">To:</span>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="border border-amber-300 rounded px-2 py-1 bg-white text-xs"
+                className="border border-blue-300 rounded px-2 py-1 bg-white text-xs"
               />
             </div>
           </div>
@@ -176,7 +176,7 @@ export default function ReceiptBookPage() {
                       <td className="py-3 px-3 sm:px-4 text-center font-mono text-slate-600 whitespace-nowrap">
                         {itemCount}
                       </td>
-                      <td className="py-3 px-3 sm:px-4 text-right font-black text-amber-600 whitespace-nowrap">
+                      <td className="py-3 px-3 sm:px-4 text-right font-black text-blue-700 whitespace-nowrap">
                         {formatCurrency(r.total_amount, currency)}
                       </td>
                       <td className="py-3 px-3 sm:px-4 text-right space-x-1.5 whitespace-nowrap">
@@ -189,7 +189,7 @@ export default function ReceiptBookPage() {
                         </button>
                         <button
                           onClick={() => setSelectedReceipt(r)}
-                          className="bg-amber-500 hover:bg-amber-600 text-slate-950 px-2.5 py-1 rounded-lg text-xs font-bold transition shadow-xs inline-flex items-center space-x-1"
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition shadow-xs inline-flex items-center space-x-1"
                         >
                           <Printer className="w-3 h-3" />
                           <span>Print</span>

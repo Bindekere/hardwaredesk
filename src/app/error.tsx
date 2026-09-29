@@ -37,7 +37,7 @@ export default function GlobalError({
         <div className="flex items-center justify-center space-x-2 pt-2">
           <button
             onClick={() => reset()}
-            className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-sm"
+            className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-md shadow-blue-900/20"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Try Again</span>
