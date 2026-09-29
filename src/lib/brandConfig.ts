@@ -9,7 +9,9 @@
 
 export const BRAND_CONFIG = {
   // Store Identity
-  shopName: process.env.NEXT_PUBLIC_SHOP_NAME || 'S.H Paint World',
+  shopName: (process.env.NEXT_PUBLIC_SHOP_NAME && !process.env.NEXT_PUBLIC_SHOP_NAME.toLowerCase().includes('hardwaredesk'))
+    ? process.env.NEXT_PUBLIC_SHOP_NAME
+    : 'S.H Paint World',
   shortName: 'S.H Paint World',
   badge: 'SH',
   businessType: 'Paints & Hardware',
